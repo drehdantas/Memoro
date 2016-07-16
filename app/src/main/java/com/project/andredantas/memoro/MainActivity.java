@@ -73,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+        jkhvjvhg
 
         tabLayout.setupWithViewPager(mPager);
     }
