@@ -24,18 +24,25 @@ import butterknife.OnClick;
  * Created by Andre Dantas on 7/13/16.
  */
 public class HorariosAdapter extends RecyclerView.Adapter<HorariosAdapter.MyViewHolder>{
-    private Context context;
+    public static String SEG = "Segunda Feira";
+    public static String TER = "Terca Feira";
+    public static String QUA = "Quarta Feira";
+    public static String QUI = "Quinta Feira";
+    public static String SEX = "Sexta Feira";
+    public static String SAB = "Sabado";
+    public static String DOM = "Domingo";
+
+    private String dia;
     private LayoutInflater layoutInflater;
     private OnHorarioClickListener listener;
     private List<Horario> horarioList = Collections.EMPTY_LIST;
 
-    public HorariosAdapter(Context context, List<Horario> horarioList, OnHorarioClickListener listener) {
+    public HorariosAdapter(Context context, List<Horario> horarioList, String dia, OnHorarioClickListener listener) {
         if(context == null)
             return;
-
         this.listener = listener;
-        this.context = context;
         this.horarioList = horarioList;
+        this.dia = dia;
         this.layoutInflater = LayoutInflater.from(context);
     }
 
@@ -68,13 +75,11 @@ public class HorariosAdapter extends RecyclerView.Adapter<HorariosAdapter.MyView
 
         @OnClick(R.id.horario_card)
         public void onClickImageTrending() {
-            listener.onHorarioClick(horarioList.get(getAdapterPosition()));
-            Toast.makeText(context, "clicou opa", Toast.LENGTH_LONG).show();
+            listener.onHorarioClick(horarioList.get(getAdapterPosition()), dia);
         }
     }
 
     public interface OnHorarioClickListener {
-        void onHorarioClick(Horario horario);
-        void onCriarHorarioClick();
+        void onHorarioClick(Horario horario, String dia);
     }
 }

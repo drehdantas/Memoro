@@ -9,7 +9,9 @@ public class Horario extends RealmObject{
     private String dia;
     private String titulo;
     private String descricao;
-    private long hora;
+    private long tempo;
+    private String hora;
+    private String minutos;
 
     public String getDia() {
         return dia;
@@ -35,11 +37,27 @@ public class Horario extends RealmObject{
         this.titulo = titulo;
     }
 
-    public long getHora() {
+    public long getTempo() {
+        return tempo;
+    }
+
+    public void setTempo(long tempo) {
+        this.tempo = tempo;
+    }
+
+    public String getMinutos() {
+        return minutos;
+    }
+
+    public void setMinutos(String minutos) {
+        this.minutos = minutos;
+    }
+
+    public String getHora() {
         return hora;
     }
 
-    public void setHora(long hora) {
+    public void setHora(String hora) {
         this.hora = hora;
     }
 }

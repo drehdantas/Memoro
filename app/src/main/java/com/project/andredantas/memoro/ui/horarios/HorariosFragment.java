@@ -19,6 +19,7 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 
 public class HorariosFragment extends Fragment implements HorariosAdapter.OnHorarioClickListener{
@@ -50,39 +51,83 @@ public class HorariosFragment extends Fragment implements HorariosAdapter.OnHora
         listHorariosSeg.add(horario);
         listHorariosSeg.add(horario);
 
-        horariosSeg.setAdapter(new HorariosAdapter(getActivity(), listHorariosSeg, this));
+        horariosSeg.setAdapter(new HorariosAdapter(getActivity(), listHorariosSeg, HorariosAdapter.SEG, this));
         horariosSeg.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
 
-        horariosTer.setAdapter(new HorariosAdapter(getActivity(), listHorariosSeg, this));
+        horariosTer.setAdapter(new HorariosAdapter(getActivity(), listHorariosSeg, HorariosAdapter.TER, this));
         horariosTer.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
 
-        horariosQua.setAdapter(new HorariosAdapter(getActivity(), listHorariosSeg, this));
+        horariosQua.setAdapter(new HorariosAdapter(getActivity(), listHorariosSeg, HorariosAdapter.QUA, this));
         horariosQua.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
 
-        horariosQui.setAdapter(new HorariosAdapter(getActivity(), listHorariosSeg, this));
+        horariosQui.setAdapter(new HorariosAdapter(getActivity(), listHorariosSeg, HorariosAdapter.QUI, this));
         horariosQui.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
 
-        horariosSex.setAdapter(new HorariosAdapter(getActivity(), listHorariosSeg, this));
+        horariosSex.setAdapter(new HorariosAdapter(getActivity(), listHorariosSeg, HorariosAdapter.SEX, this));
         horariosSex.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
 
-        horariosSab.setAdapter(new HorariosAdapter(getActivity(), listHorariosSeg, this));
+        horariosSab.setAdapter(new HorariosAdapter(getActivity(), listHorariosSeg, HorariosAdapter.SAB, this));
         horariosSab.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
 
-        horariosDom.setAdapter(new HorariosAdapter(getActivity(), listHorariosSeg, this));
+        horariosDom.setAdapter(new HorariosAdapter(getActivity(), listHorariosSeg, HorariosAdapter.DOM, this));
         horariosDom.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
         return view;
     }
 
     @Override
-    public void onHorarioClick(Horario horario) {
+    public void onHorarioClick(Horario horario, String dia) {
         Intent intent = new Intent(getActivity(), CriarHorarioActivity.class);
         intent.putExtra("horario", App.gsonInstance().toJson(horario));
+        intent.putExtra("dia", dia);
         startActivity(intent);
     }
 
-    @Override
-    public void onCriarHorarioClick() {
+    @OnClick(R.id.criar_seg)
+    public void onCriarHorarioSegClick() {
         Intent intent = new Intent(getActivity(), CriarHorarioActivity.class);
+        intent.putExtra("dia", HorariosAdapter.SEG);
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.criar_ter)
+    public void onCriarHorarioTerClick() {
+        Intent intent = new Intent(getActivity(), CriarHorarioActivity.class);
+        intent.putExtra("dia", HorariosAdapter.TER);
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.criar_qua)
+    public void onCriarHorarioQuaClick() {
+        Intent intent = new Intent(getActivity(), CriarHorarioActivity.class);
+        intent.putExtra("dia", HorariosAdapter.QUA);
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.criar_qui)
+    public void onCriarHorarioQuiClick() {
+        Intent intent = new Intent(getActivity(), CriarHorarioActivity.class);
+        intent.putExtra("dia", HorariosAdapter.QUI);
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.criar_sex)
+    public void onCriarHorarioSexClick() {
+        Intent intent = new Intent(getActivity(), CriarHorarioActivity.class);
+        intent.putExtra("dia", HorariosAdapter.SEX);
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.criar_sab)
+    public void onCriarHorarioSabClick() {
+        Intent intent = new Intent(getActivity(), CriarHorarioActivity.class);
+        intent.putExtra("dia", HorariosAdapter.SAB);
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.criar_dom)
+    public void onCriarHorarioDomClick() {
+        Intent intent = new Intent(getActivity(), CriarHorarioActivity.class);
+        intent.putExtra("dia", HorariosAdapter.DOM);
         startActivity(intent);
     }
 }

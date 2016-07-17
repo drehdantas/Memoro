@@ -14,6 +14,7 @@ import io.realm.RealmObject;
  */
 public class App extends Application {
     public static App instance;
+    private final String dateFormat = "yyyy-MM-dd'T'HH:mm:ss";
 
     private Gson gson;
 
@@ -21,6 +22,8 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         instance = this;
+        gson = new GsonBuilder().setDateFormat(dateFormat).create();
+
         setupGson();
     }
 

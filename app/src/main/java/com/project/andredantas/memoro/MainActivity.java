@@ -57,6 +57,8 @@ public class MainActivity extends AppCompatActivity {
             getSupportActionBar().setTitle(getString(R.string.app_name));
         }
 
+        menu.setClosedOnTouchOutside(true);
+
     }
 
     public void initViewPager() {
@@ -131,5 +133,13 @@ public class MainActivity extends AppCompatActivity {
             return mTabNames.get(position);
         }
 
+    }
+
+    @Override
+    public void onBackPressed(){
+        if (menu.isOpened())
+            menu.close(true);
+        else
+            super.onBackPressed();
     }
 }
