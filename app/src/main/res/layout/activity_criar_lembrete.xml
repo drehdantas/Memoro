@@ -9,4 +9,10 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.project.andredantas.memoro.ui.lembretes.CriarLembreteActivity">
 
+   <com.project.andredantas.memoro.utils.AudioRecordLayout
+       android:id="@+id/activity_criar_lembrete_audio_layout"
+       android:layout_width="match_parent"
+       android:layout_height="match_parent">
+
+   </com.project.andredantas.memoro.utils.AudioRecordLayout>
 </RelativeLayout>
