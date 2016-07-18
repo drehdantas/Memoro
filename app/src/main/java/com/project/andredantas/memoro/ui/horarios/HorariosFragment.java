@@ -21,6 +21,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.realm.Realm;
 
 
 public class HorariosFragment extends Fragment implements HorariosAdapter.OnHorarioClickListener{

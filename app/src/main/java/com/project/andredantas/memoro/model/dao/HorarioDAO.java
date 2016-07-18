@@ -1,7 +1,11 @@
 package com.project.andredantas.memoro.model.dao;
 
 import com.project.andredantas.memoro.model.Horario;
+import com.project.andredantas.memoro.model.HorarioNormal;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import io.realm.Realm;
@@ -54,8 +58,27 @@ public class HorarioDAO {
     }
 
     public static List<Horario> horariosOrdenados(List<Horario> horarios){
+        List<HorarioNormal> horarioNormal = HorarioNormal.convertFromRealm(horarios);
+        Collections.sort(horarioNormal, new Comparator<HorarioNormal>() {
+            @Override
+            public int compare(HorarioNormal obj1, HorarioNormal obj2) {
+                long value1 = (obj1.getHora() * 60) + obj1.getMinutos();
+                long value2 = (obj2.getHora() * 60) + obj2.getMinutos();
 
-        return horarios;
+                return value1 < value2 ? -1
+                        : value1 > value2 ? 1
+                        : 0;
+            }
+        });
+
+//        Realm realm = Realm.getDefaultInstance();
+//        realm.beginTransaction();
+        List<Horario> horariosOrdenados = new ArrayList<>();
+        for (int i = 0; i < horarioNormal.size(); i++) {
+            horariosOrdenados.add(getById(horarioNormal.get(i).getId()));
+        }
+//        realm.commitTransaction();
+        return horariosOrdenados;
     }
 
 }
