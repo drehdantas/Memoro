@@ -32,18 +32,6 @@ public class LembreteFragment extends Fragment implements LembretesAdapter.OnLem
         View view = inflater.inflate(R.layout.fragment_lembrete, container, false);
         ButterKnife.bind(this, view);
 
-        Lembrete lembrete = new Lembrete();
-        listLembrete.add(lembrete);
-        listLembrete.add(lembrete);
-        listLembrete.add(lembrete);
-        listLembrete.add(lembrete);
-        listLembrete.add(lembrete);
-        listLembrete.add(lembrete);
-        listLembrete.add(lembrete);
-        listLembrete.add(lembrete);
-        listLembrete.add(lembrete);
-
-
         lembretesRecycle.setAdapter(new LembretesAdapter(getActivity(), listLembrete, this));
         lembretesRecycle.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
 
@@ -53,7 +41,7 @@ public class LembreteFragment extends Fragment implements LembretesAdapter.OnLem
     @Override
     public void onLembreteClick(Lembrete lembrete) {
         Intent intent = new Intent(getActivity(), CriarLembreteActivity.class);
-        intent.putExtra("lembrete", App.gsonInstance().toJson(lembrete));
+        intent.putExtra("lembrete", lembrete.getId());
         startActivity(intent);
     }
 }

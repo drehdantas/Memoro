@@ -1,20 +1,33 @@
 package com.project.andredantas.memoro.model;
 
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by Andre Dantas on 7/14/16.
  */
 public class Lembrete extends RealmObject {
+    @PrimaryKey
+    private long id;
     private String titulo;
     private String descricao;
     private String cor;
+    private String type;
     private long alarmeDia;
     private long alarmeHora;
-    private Horario horarioRelacionado;
+    private long horarioRelacionado;
+    private boolean active = true;
 
     private String imagem;
     private String audio;
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public String getTitulo() {
         return titulo;
@@ -56,11 +69,11 @@ public class Lembrete extends RealmObject {
         this.alarmeHora = alarmeHora;
     }
 
-    public Horario getHorarioRelacionado() {
+    public long getHorarioRelacionado() {
         return horarioRelacionado;
     }
 
-    public void setHorarioRelacionado(Horario horarioRelacionado) {
+    public void setHorarioRelacionado(long horarioRelacionado) {
         this.horarioRelacionado = horarioRelacionado;
     }
 
@@ -78,5 +91,21 @@ public class Lembrete extends RealmObject {
 
     public void setImagem(String imagem) {
         this.imagem = imagem;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

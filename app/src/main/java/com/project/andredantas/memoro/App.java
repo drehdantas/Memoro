@@ -7,6 +7,8 @@ import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
 import io.realm.RealmObject;
 
 /**
@@ -22,6 +24,8 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         instance = this;
+        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(this).build();
+        Realm.setDefaultConfiguration(realmConfiguration);
         gson = new GsonBuilder().setDateFormat(dateFormat).create();
 
         setupGson();

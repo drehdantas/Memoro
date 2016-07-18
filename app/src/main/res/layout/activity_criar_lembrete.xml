@@ -3,16 +3,130 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.project.andredantas.memoro.ui.lembretes.CriarLembreteActivity">
 
-   <com.project.andredantas.memoro.utils.AudioRecordLayout
-       android:id="@+id/activity_criar_lembrete_audio_layout"
-       android:layout_width="match_parent"
-       android:layout_height="match_parent">
+    <RelativeLayout
+        android:id="@+id/my_toolbar_component"
+        android:layout_width="match_parent"
+        android:layout_height="56dp">
 
-   </com.project.andredantas.memoro.utils.AudioRecordLayout>
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/lembrete_toolbar"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            app:theme="@style/AppTheme"
+            app:titleTextColor="@android:color/white"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:minHeight="56dp"></android.support.v7.widget.Toolbar>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/component_layout"
+        android:layout_below="@+id/my_toolbar_component"
+        android:layout_margin="10dp"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/lembrete_titulo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Lembrete"
+            android:maxLines="1"
+            android:singleLine="true" />
+
+        <EditText
+            android:id="@+id/lembrete_resumo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:hint="Descrição"
+            android:maxLines="10" />
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_below="@+id/component_layout"
+        android:id="@+id/layout_types"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:id="@+id/voice_recorder_layout"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <com.project.andredantas.memoro.utils.AudioRecordLayout
+                android:id="@+id/activity_criar_lembrete_audio_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            </com.project.andredantas.memoro.utils.AudioRecordLayout>
+
+        </RelativeLayout>
+
+
+        <ImageView
+            android:visibility="gone"
+            android:id="@+id/lembrete_imagem"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="300dp" />
+
+        <RelativeLayout
+            android:visibility="gone"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:id="@+id/lembrete_imagem_layout"
+            android:layout_width="match_parent"
+            android:layout_height="300dp">
+
+            <LinearLayout
+                android:layout_marginLeft="25dp"
+                android:gravity="center"
+                android:id="@+id/click_camera"
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="true">
+                <ImageView
+                    android:tint="@android:color/darker_gray"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_camera"/>
+                <TextView
+                    android:text="Foto da Câmera"
+                    android:tint="@android:color/darker_gray"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_marginRight="25dp"
+                android:gravity="center"
+                android:id="@+id/click_galeria"
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true">
+                <ImageView
+                    android:tint="@android:color/darker_gray"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_picture"/>
+                <TextView
+                    android:text="Foto da Galeria"
+                    android:tint="@android:color/darker_gray"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+        </RelativeLayout>
+    </RelativeLayout>
 </RelativeLayout>

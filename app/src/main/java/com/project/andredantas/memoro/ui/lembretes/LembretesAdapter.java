@@ -65,11 +65,10 @@ public class LembretesAdapter extends RecyclerView.Adapter<LembretesAdapter.MyVi
             ButterKnife.bind(this, itemView);
         }
 
-//        @OnClick(R.id.horario_card)
-//        public void onClickImageTrending() {
-//            listener.onLembreteClick(lembreteList.get(getAdapterPosition()));
-//            Toast.makeText(context, "clicou opa", Toast.LENGTH_LONG).show();
-//        }
+        @OnClick(R.id.lembrete_card)
+        public void clickLembrete() {
+            listener.onLembreteClick(lembreteList.get(getAdapterPosition()));
+        }
     }
 
     public interface OnLembreteClickListener {

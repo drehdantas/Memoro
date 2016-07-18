@@ -54,7 +54,9 @@ public class HorariosAdapter extends RecyclerView.Adapter<HorariosAdapter.MyView
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-
+        Horario horario = horarioList.get(position);
+        holder.horarioTitulo.setText(horario.getTitulo());
+        holder.horarioHora.setText(horario.getHora() + ":" + horario.getMinutos());
     }
 
     @Override

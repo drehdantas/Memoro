@@ -3,20 +3,26 @@ package com.project.andredantas.memoro.ui.horarios;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.app.Activity;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.Selection;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.google.gson.reflect.TypeToken;
 import com.project.andredantas.memoro.App;
 import com.project.andredantas.memoro.R;
 import com.project.andredantas.memoro.model.Horario;
+import com.project.andredantas.memoro.model.dao.HorarioDAO;
 
 import java.sql.Time;
 import java.util.Calendar;
@@ -24,10 +30,14 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
+import io.realm.Realm;
 
 public class CriarHorarioActivity extends AppCompatActivity {
-    private String dia;
+    private String dia, tempo;
     private Horario horario;
+    private static int selectedHour, selectedMinute;
+    private Realm realm = Realm.getDefaultInstance();
 
     @Bind(R.id.horario_toolbar)
     Toolbar toolbar;
@@ -38,9 +48,9 @@ public class CriarHorarioActivity extends AppCompatActivity {
     @Bind(R.id.day_week)
     TextView dayWeek;
     @Bind(R.id.horario_titulo)
-    TextView horarioTitulo;
+    EditText horarioTitulo;
     @Bind(R.id.horario_resumo)
-    TextView horarioResumo;
+    EditText horarioResumo;
     @Bind(R.id.apagar_horario)
     Button apagarHorario;
 
@@ -58,34 +68,38 @@ public class CriarHorarioActivity extends AppCompatActivity {
         if (extras != null) {
             if (extras.getString("dia") != null) {
                 dia = extras.getString("dia");
-            } if(extras.getString("horario") != null){
-                String jsonHorario = extras.getString("horario");
-                horario = App.gsonInstance().fromJson(jsonHorario, Horario.class);
+            }
+            if (extras.getLong("horario") != 0) {
+                long horarioId = extras.getLong("horario");
+                horario = HorarioDAO.getById(horarioId);
             }
         }
     }
 
-    public void initView(){
+    public void initView() {
         setSupportActionBar(toolbar);
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
-            getSupportActionBar().setTitle(horario!= null? "Editar Horário" : "Criar Horário");
+            getSupportActionBar().setTitle(horario != null ? "Editar Horário" : "Criar Horário");
         }
 
         dayWeek.setText(dia);
-        if (horario != null){
+        if (horario != null) {
             textTime.setText(horario.getHora() + ":" + horario.getMinutos());
             horarioTitulo.setText(horario.getTitulo());
             horarioResumo.setText(horario.getDescricao());
             apagarHorario.setVisibility(View.VISIBLE);
-        }else{
+            setTextWithCursosFinal(horarioTitulo);
+            setTextWithCursosFinal(horarioResumo);
+        } else {
             apagarHorario.setVisibility(View.GONE);
-            int selectedHour =  new Time(System.currentTimeMillis()).getHours();
-            int selectedMinute =  new Time(System.currentTimeMillis()).getMinutes();
+            selectedHour = new Time(System.currentTimeMillis()).getHours();
+            selectedMinute = new Time(System.currentTimeMillis()).getMinutes();
             String curTime = String.format("%02d:%02d", selectedHour, selectedMinute);
             textTime.setText(curTime);
+            tempo = curTime;
         }
 
         clickTime.setOnClickListener(new View.OnClickListener() {
@@ -100,7 +114,10 @@ public class CriarHorarioActivity extends AppCompatActivity {
                 mTimePicker = new TimePickerDialog(CriarHorarioActivity.this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                        textTime.setText( selectedHour + ":" + selectedMinute);
+                        CriarHorarioActivity.selectedHour = selectedHour;
+                        CriarHorarioActivity.selectedMinute = selectedMinute;
+                        tempo = String.format("%02d:%02d", selectedHour, selectedMinute);
+                        textTime.setText(tempo);
                     }
                 }, hour, minute, true);//Yes 24 hour time
                 mTimePicker.setTitle("Selecione a hora");
@@ -124,12 +141,58 @@ public class CriarHorarioActivity extends AppCompatActivity {
                 onBackPressed();
                 break;
             case R.id.action_check:
-
-//                if (horario)
+                if (horarioTitulo.getText().toString().equals("") || horarioTitulo.getText() == null) {
+                    Snackbar.make(this.findViewById(android.R.id.content), "Horário precisa de um título pelo menos", Snackbar.LENGTH_SHORT).show();
+                } else {
+                    if (horario != null) {
+                        //editar horario
+                        horario = setDataHorario(horario);
+                        HorarioDAO.updateHorario(realm, horario);
+                        finish();
+                        Toast.makeText(this, "Horario atualizado com sucesso", Toast.LENGTH_LONG).show();
+                    } else {
+                        //criar um horario
+                        horario = new Horario();
+                        horario = setDataHorario(horario);
+                        HorarioDAO.saveHorario(realm, horario);
+                        finish();
+                        Toast.makeText(this, "Horario criado com sucesso", Toast.LENGTH_LONG).show();
+                    }
+                }
                 return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @OnClick(R.id.apagar_horario)
+    public void apagarHorario(){
+        HorarioDAO.deleteHorario(realm, horario);
+        finish();
+        Toast.makeText(this, "Horario apagado com sucesso", Toast.LENGTH_LONG).show();
+    }
+
+    public Horario setDataHorario(Horario horario) {
+        realm.beginTransaction();
+        horario.setTitulo(horarioTitulo.getText().toString());
+        horario.setDescricao(horarioResumo.getText().toString());
+        horario.setDia(dia);
+
+        horario.setHora(selectedHour);
+        horario.setMinutos(selectedMinute);
+        horario.setTempo(tempo);
+
+        horario.setId(System.currentTimeMillis());
+        realm.commitTransaction();
+
+        return horario;
+    }
+
+    public static void setTextWithCursosFinal(EditText edittext) {
+        //set cursos no final
+        int position = edittext.length();
+        Editable etext = edittext.getText();
+        Selection.setSelection(etext, position);
     }
 
 }

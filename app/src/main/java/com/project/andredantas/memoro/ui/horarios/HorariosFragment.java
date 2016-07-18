@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import com.project.andredantas.memoro.App;
 import com.project.andredantas.memoro.R;
 import com.project.andredantas.memoro.model.Horario;
+import com.project.andredantas.memoro.model.dao.HorarioDAO;
 import com.project.andredantas.memoro.ui.lembretes.CriarLembreteActivity;
 
 import java.util.ArrayList;
@@ -38,46 +39,26 @@ public class HorariosFragment extends Fragment implements HorariosAdapter.OnHora
     @Bind(R.id.horarios_dom)
     RecyclerView horariosDom;
 
-    public List<Horario> listHorariosSeg = new ArrayList<>();
+    private List<Horario> listHorariosSeg = new ArrayList<>();
+    private List<Horario> listHorariosTer = new ArrayList<>();
+    private List<Horario> listHorariosQua = new ArrayList<>();
+    private List<Horario> listHorariosQui = new ArrayList<>();
+    private List<Horario> listHorariosSex = new ArrayList<>();
+    private List<Horario> listHorariosSab = new ArrayList<>();
+    private List<Horario> listHorariosDom = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_horarios, container, false);
         ButterKnife.bind(this, view);
-
-        Horario horario = new Horario();
-        listHorariosSeg.add(horario);
-        listHorariosSeg.add(horario);
-        listHorariosSeg.add(horario);
-
-        horariosSeg.setAdapter(new HorariosAdapter(getActivity(), listHorariosSeg, HorariosAdapter.SEG, this));
-        horariosSeg.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
-
-        horariosTer.setAdapter(new HorariosAdapter(getActivity(), listHorariosSeg, HorariosAdapter.TER, this));
-        horariosTer.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
-
-        horariosQua.setAdapter(new HorariosAdapter(getActivity(), listHorariosSeg, HorariosAdapter.QUA, this));
-        horariosQua.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
-
-        horariosQui.setAdapter(new HorariosAdapter(getActivity(), listHorariosSeg, HorariosAdapter.QUI, this));
-        horariosQui.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
-
-        horariosSex.setAdapter(new HorariosAdapter(getActivity(), listHorariosSeg, HorariosAdapter.SEX, this));
-        horariosSex.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
-
-        horariosSab.setAdapter(new HorariosAdapter(getActivity(), listHorariosSeg, HorariosAdapter.SAB, this));
-        horariosSab.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
-
-        horariosDom.setAdapter(new HorariosAdapter(getActivity(), listHorariosSeg, HorariosAdapter.DOM, this));
-        horariosDom.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
         return view;
     }
 
     @Override
     public void onHorarioClick(Horario horario, String dia) {
         Intent intent = new Intent(getActivity(), CriarHorarioActivity.class);
-        intent.putExtra("horario", App.gsonInstance().toJson(horario));
+        intent.putExtra("horario", horario.getId());
         intent.putExtra("dia", dia);
         startActivity(intent);
     }
@@ -129,5 +110,37 @@ public class HorariosFragment extends Fragment implements HorariosAdapter.OnHora
         Intent intent = new Intent(getActivity(), CriarHorarioActivity.class);
         intent.putExtra("dia", HorariosAdapter.DOM);
         startActivity(intent);
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        listHorariosSeg = HorarioDAO.listHorarios(HorariosAdapter.SEG);
+        horariosSeg.setAdapter(new HorariosAdapter(getActivity(), listHorariosSeg, HorariosAdapter.SEG, this));
+        horariosSeg.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+
+        listHorariosTer = HorarioDAO.listHorarios(HorariosAdapter.TER);
+        horariosTer.setAdapter(new HorariosAdapter(getActivity(), listHorariosTer, HorariosAdapter.TER, this));
+        horariosTer.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+
+        listHorariosQua = HorarioDAO.listHorarios(HorariosAdapter.QUA);
+        horariosQua.setAdapter(new HorariosAdapter(getActivity(), listHorariosQua, HorariosAdapter.QUA, this));
+        horariosQua.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+
+        listHorariosQui = HorarioDAO.listHorarios(HorariosAdapter.QUI);
+        horariosQui.setAdapter(new HorariosAdapter(getActivity(), listHorariosQui, HorariosAdapter.QUI, this));
+        horariosQui.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+
+        listHorariosSex = HorarioDAO.listHorarios(HorariosAdapter.SEX);
+        horariosSex.setAdapter(new HorariosAdapter(getActivity(), listHorariosSex, HorariosAdapter.SEX, this));
+        horariosSex.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+
+        listHorariosSab = HorarioDAO.listHorarios(HorariosAdapter.SAB);
+        horariosSab.setAdapter(new HorariosAdapter(getActivity(), listHorariosSab, HorariosAdapter.SAB, this));
+        horariosSab.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+
+        listHorariosDom = HorarioDAO.listHorarios(HorariosAdapter.DOM);
+        horariosDom.setAdapter(new HorariosAdapter(getActivity(), listHorariosDom, HorariosAdapter.DOM, this));
+        horariosDom.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
     }
 }
