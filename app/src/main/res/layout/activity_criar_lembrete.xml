@@ -170,10 +170,10 @@
                     android:layout_height="wrap_content"
                     android:visibility="gone">
 
-                    <com.project.andredantas.memoro.utils.AudioRecordLayout
+                    <com.project.andredantas.memoro.utils.audio.AudioRecordLayout
                         android:id="@+id/activity_criar_lembrete_audio_layout"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"></com.project.andredantas.memoro.utils.AudioRecordLayout>
+                        android:layout_height="wrap_content"/>
 
                 </RelativeLayout>
 

@@ -5,19 +5,25 @@
     android:layout_height="wrap_content">
 
     <ImageView
-        android:id="@+id/record_audio_button"
+        android:id="@+id/voice_record_button"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_centerHorizontal="true"
-        android:src="@drawable/ic_voice_record"/>
+        android:src="@drawable/ic_play"/>
 
     <TextView
-        android:id="@+id/record_audio_timer"
+        android:id="@+id/voice_record_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/record_audio_button"
-        android:textSize="24sp"
-        android:text="00:33"/>
+        android:text="Começar a gravar"
+        android:layout_below="@+id/voice_record_button"
+        android:layout_centerHorizontal="true"/>
+
+    <Chronometer
+        android:id="@+id/voice_record_chronometer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/voice_record_message"
+        android:layout_centerHorizontal="true"/>
 
 </RelativeLayout>

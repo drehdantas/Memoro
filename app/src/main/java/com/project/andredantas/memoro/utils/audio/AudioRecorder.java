@@ -1,12 +1,16 @@
-package com.project.andredantas.memoro.utils;
+package com.project.andredantas.memoro.utils.audio;
 
 import android.media.MediaRecorder;
 import android.util.Log;
 
+import com.project.andredantas.memoro.utils.Constants;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by andre on 03/08/15.
@@ -17,8 +21,7 @@ public class AudioRecorder {
     private MediaRecorder mRecorder = null;
     private String mFileName;
     static final String TAG = "Audio Record";
-
-    public AudioRecorder() {}
+    List<File> tmpFiles = new ArrayList<>();
 
     public void startRecording(){
         File directory = new File(Constants.AUDIO_FOLDER);
@@ -37,9 +40,15 @@ public class AudioRecorder {
             }
         }
 
+        tmpFiles.add(filePath);
         Log.d(TAG, "audio path " + filePath);
-
         mFileName = filePath.toString();
+
+        if(mRecorder != null){
+            mRecorder.release();
+            mRecorder = null;
+        }
+
         mRecorder = new MediaRecorder();
         mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mRecorder.setAudioSamplingRate(44100);
@@ -68,27 +77,18 @@ public class AudioRecorder {
         recording = false;
     }
 
-    public void finish() {
-        mRecorder.reset();
-        mRecorder.release();
-        mRecorder = null;
-        recording = false;
-    }
-
-    public void delete() {
-        File dir = new File(mFileName);
-        mRecorder.reset();
-        mRecorder.release();
-        mRecorder = null;
-        recording = false;
-
-        if (dir.delete()) {
-            Log.e("EXCLUIU", "EXCLUIU");
+    public void deleteFiles() {
+        for (int i = 0; i < tmpFiles.size(); i++) {
+            Log.d(TAG, "New file deleted =>" + tmpFiles.get(i).getAbsolutePath());
+            boolean delete = tmpFiles.get(i).delete();
         }
+
     }
 
     public boolean isRecording() {
         return recording;
     }
+
+
 
 }

@@ -7,6 +7,6 @@ import android.os.Environment;
  */
 public class Constants {
     public static final String AUDIO_FOLDER = Environment.getExternalStorageDirectory() + "/memoro/audio";
-    public static final String FILE_EXT = ".3gp";
+    public static final String FILE_EXT = ".mp3";
 
 }

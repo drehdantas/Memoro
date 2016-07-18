@@ -1,6 +1,5 @@
 package com.project.andredantas.memoro.ui.lembretes;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -11,7 +10,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.project.andredantas.memoro.R;
@@ -19,7 +17,7 @@ import com.project.andredantas.memoro.model.Horario;
 import com.project.andredantas.memoro.model.Lembrete;
 import com.project.andredantas.memoro.model.dao.HorarioDAO;
 import com.project.andredantas.memoro.model.dao.LembreteDAO;
-import com.project.andredantas.memoro.utils.AudioRecorder;
+import com.project.andredantas.memoro.utils.audio.AudioRecordLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,10 +41,13 @@ public class CriarLembreteActivity extends AppCompatActivity {
     ImageView lembreteImagem;
     @Bind(R.id.lembrete_imagem_layout)
     RelativeLayout lembreteImageLayout;
-    @Bind(R.id.voice_recorder_layout)
-    RelativeLayout voiceRecorderLayout;
     @Bind(R.id.horarios_spinner)
     MaterialSpinner horariosSpinner;
+
+    @Bind(R.id.voice_recorder_layout) RelativeLayout voiceRecorderLayout;
+    @Bind(R.id.activity_criar_lembrete_audio_layout) AudioRecordLayout audioRecordLayout;
+
+    boolean notDeleteFile = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +84,7 @@ public class CriarLembreteActivity extends AppCompatActivity {
                 listHorariosTitulos.add(listHorarios.get(i).getTitulo());
             }
         }
+
         horariosSpinner.setItems(listHorariosTitulos);
         horariosSpinner.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
             @Override
@@ -117,9 +119,14 @@ public class CriarLembreteActivity extends AppCompatActivity {
         int id = item.getItemId();
         switch (id) {
             case android.R.id.home:
+                if(notDeleteFile){
+                    audioRecordLayout.getAudioRecorder().deleteFiles();
+                }
                 onBackPressed();
                 break;
             case R.id.action_check:
+                notDeleteFile = false;
+
                 if (lembreteTitulo.getText().toString().equals("") || lembreteTitulo.getText() == null) {
                     Snackbar.make(this.findViewById(android.R.id.content), "Lembrete precisa de um título pelo menos", Snackbar.LENGTH_SHORT).show();
                 } else {
