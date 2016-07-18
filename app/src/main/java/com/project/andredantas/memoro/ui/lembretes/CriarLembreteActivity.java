@@ -13,6 +13,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.project.andredantas.memoro.R;
 import com.project.andredantas.memoro.model.Horario;
 import com.project.andredantas.memoro.model.Lembrete;
@@ -20,12 +21,17 @@ import com.project.andredantas.memoro.model.dao.HorarioDAO;
 import com.project.andredantas.memoro.model.dao.LembreteDAO;
 import com.project.andredantas.memoro.utils.AudioRecorder;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class CriarLembreteActivity extends AppCompatActivity {
     private String tipo;
     private Lembrete lembrete;
+    private List<Horario> listHorarios;
+    private ArrayList<String> listHorariosTitulos = new ArrayList<>();
 
     @Bind(R.id.lembrete_toolbar)
     Toolbar toolbar;
@@ -39,6 +45,9 @@ public class CriarLembreteActivity extends AppCompatActivity {
     RelativeLayout lembreteImageLayout;
     @Bind(R.id.voice_recorder_layout)
     RelativeLayout voiceRecorderLayout;
+    @Bind(R.id.horarios_spinner)
+    MaterialSpinner horariosSpinner;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,6 +76,21 @@ public class CriarLembreteActivity extends AppCompatActivity {
             voiceRecorderLayout.setVisibility(View.GONE);
             lembreteImageLayout.setVisibility(View.GONE);
         }
+
+        listHorarios = HorarioDAO.listTodosHorarios();
+        if (listHorarios != null){
+            for (int i = 0; i < listHorarios.size(); i++) {
+                listHorariosTitulos.add(listHorarios.get(i).getTitulo());
+            }
+        }
+        horariosSpinner.setItems(listHorariosTitulos);
+        horariosSpinner.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
+            @Override
+            public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
+                Snackbar.make(view, "Clicked " + item, Snackbar.LENGTH_LONG).show();
+            }
+
+        });
     }
 
     public void onIntentReceived(){

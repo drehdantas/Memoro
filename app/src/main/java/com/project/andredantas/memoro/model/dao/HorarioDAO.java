@@ -45,6 +45,14 @@ public class HorarioDAO {
         return horariosOrdenados(horarios);
     }
 
+    public static List<Horario> listTodosHorarios(){
+        List<Horario> horarios = Realm.getDefaultInstance()
+                .where(Horario.class)
+                .equalTo("active", true)
+                .findAll();
+        return horarios;
+    }
+
     public static List<Horario> horariosOrdenados(List<Horario> horarios){
 
         return horarios;

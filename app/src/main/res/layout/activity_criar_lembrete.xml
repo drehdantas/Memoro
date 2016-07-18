@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+<RelativeLayout android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="com.project.andredantas.memoro.ui.lembretes.CriarLembreteActivity">
-
+    xmlns:tools="http://schemas.android.com/tools">
     <RelativeLayout
         android:id="@+id/my_toolbar_component"
         android:layout_width="match_parent"
@@ -13,120 +11,244 @@
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/lembrete_toolbar"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-            app:theme="@style/AppTheme"
-            app:titleTextColor="@android:color/white"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/colorPrimary"
-            android:minHeight="56dp"></android.support.v7.widget.Toolbar>
+            android:minHeight="56dp"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            app:theme="@style/AppTheme"
+            app:titleTextColor="@android:color/white"></android.support.v7.widget.Toolbar>
 
     </RelativeLayout>
 
-    <LinearLayout
-        android:id="@+id/component_layout"
+    <ScrollView
         android:layout_below="@+id/my_toolbar_component"
-        android:layout_margin="10dp"
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <EditText
-            android:id="@+id/lembrete_titulo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Lembrete"
-            android:maxLines="1"
-            android:singleLine="true" />
-
-        <EditText
-            android:id="@+id/lembrete_resumo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:hint="Descrição"
-            android:maxLines="10" />
-
-    </LinearLayout>
-
-    <RelativeLayout
-        android:layout_below="@+id/component_layout"
-        android:id="@+id/layout_types"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
         <RelativeLayout
-            android:id="@+id/voice_recorder_layout"
-            android:visibility="gone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <com.project.andredantas.memoro.utils.AudioRecordLayout
-                android:id="@+id/activity_criar_lembrete_audio_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:id="@+id/component_layout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-            </com.project.andredantas.memoro.utils.AudioRecordLayout>
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:orientation="vertical">
 
-        </RelativeLayout>
+                <EditText
+                    android:id="@+id/lembrete_titulo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Lembrete"
+                    android:maxLines="1"
+                    android:singleLine="true" />
 
+                <EditText
+                    android:id="@+id/lembrete_resumo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:hint="Descrição"
+                    android:maxLines="10" />
 
-        <ImageView
-            android:visibility="gone"
-            android:id="@+id/lembrete_imagem"
-            android:layout_marginRight="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="300dp" />
+            </LinearLayout>
 
-        <RelativeLayout
-            android:visibility="gone"
-            android:layout_marginRight="10dp"
-            android:layout_marginLeft="10dp"
-            android:id="@+id/lembrete_imagem_layout"
-            android:layout_width="match_parent"
-            android:layout_height="300dp">
 
             <LinearLayout
-                android:layout_marginLeft="25dp"
-                android:gravity="center"
-                android:id="@+id/click_camera"
-                android:orientation="vertical"
-                android:layout_width="wrap_content"
+                android:id="@+id/layout_choose_horarios"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_alignParentStart="true">
-                <ImageView
-                    android:tint="@android:color/darker_gray"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_camera"/>
+                android:layout_below="@+id/component_layout"
+                android:layout_margin="10dp"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="4dp"
+                android:orientation="vertical">
+
                 <TextView
-                    android:text="Foto da Câmera"
-                    android:tint="@android:color/darker_gray"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Relacionar com um horário:"
+                    android:textColor="@android:color/black"
+                    android:textSize="15sp" />
+
+                <com.jaredrummler.materialspinner.MaterialSpinner
+                    android:id="@+id/horarios_spinner"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
             </LinearLayout>
 
             <LinearLayout
-                android:layout_marginRight="25dp"
-                android:gravity="center"
-                android:id="@+id/click_galeria"
-                android:orientation="vertical"
+                android:id="@+id/horarios_alarme_layout"
+                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_below="@+id/layout_choose_horarios"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_alignParentEnd="true">
-                <ImageView
-                    android:tint="@android:color/darker_gray"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="20dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_gravity="center_vertical"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_picture"/>
-                <TextView
-                    android:text="Foto da Galeria"
-                    android:tint="@android:color/darker_gray"
+                    android:text="Horário:"
+                    android:textColor="@android:color/background_dark"
+                    android:textSize="15sp" />
+
+                <LinearLayout
+                    android:clickable="true"
+                    android:id="@+id/click_time"
+                    android:gravity="center_vertical"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/text_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="4dp"
+                        android:text="00:00"
+                        android:textColor="@android:color/background_dark"
+                        android:textSize="15sp" />
+
+                    <ImageView
+                        android:layout_gravity="center"
+                        android:background="@drawable/ic_arrow_drop_down_black_24dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_marginStart="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Dia:"
+                    android:textColor="@android:color/background_dark"
+                    android:textSize="15sp" />
+
+                <LinearLayout
+                    android:clickable="true"
+                    android:id="@+id/click_data"
+                    android:gravity="center_vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/data_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="4dp"
+                        android:text="23/04"
+                        android:textColor="@android:color/background_dark"
+                        android:textSize="15sp" />
+
+                    <ImageView
+                        android:layout_gravity="center"
+                        android:background="@drawable/ic_arrow_drop_down_black_24dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
             </LinearLayout>
+
+            <RelativeLayout
+                android:background="#e5e5e5"
+                android:id="@+id/layout_types"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/horarios_alarme_layout">
+
+                <RelativeLayout
+                    android:id="@+id/voice_recorder_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone">
+
+                    <com.project.andredantas.memoro.utils.AudioRecordLayout
+                        android:id="@+id/activity_criar_lembrete_audio_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"></com.project.andredantas.memoro.utils.AudioRecordLayout>
+
+                </RelativeLayout>
+
+
+                <ImageView
+                    android:id="@+id/lembrete_imagem"
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:visibility="gone" />
+
+                <RelativeLayout
+                    android:id="@+id/lembrete_imagem_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:visibility="gone">
+
+                    <LinearLayout
+                        android:id="@+id/click_camera"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="25dp"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_camera"
+                            android:tint="@android:color/darker_gray" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Foto da Câmera"
+                            android:tint="@android:color/darker_gray" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/click_galeria"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="25dp"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_picture"
+                            android:tint="@android:color/darker_gray" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Foto da Galeria"
+                            android:tint="@android:color/darker_gray" />
+                    </LinearLayout>
+                </RelativeLayout>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_below="@+id/layout_types"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"/>
+
         </RelativeLayout>
-    </RelativeLayout>
+    </ScrollView>
+
 </RelativeLayout>
