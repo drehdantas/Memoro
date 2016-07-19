@@ -87,7 +87,7 @@ public class CriarHorarioActivity extends AppCompatActivity {
 
         dayWeek.setText(dia);
         if (horario != null) {
-            textTime.setText(horario.getHora() + ":" + horario.getMinutos());
+            textTime.setText(horario.getTempo());
             horarioTitulo.setText(horario.getTitulo());
             horarioResumo.setText(horario.getDescricao());
             apagarHorario.setVisibility(View.VISIBLE);

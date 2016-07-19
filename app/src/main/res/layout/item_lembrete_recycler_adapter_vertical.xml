@@ -6,7 +6,6 @@
     android:orientation="vertical">
 
     <android.support.v7.widget.CardView
-        card_view:cardBackgroundColor="@color/colorPrimary"
         android:id="@+id/lembrete_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -22,19 +21,36 @@
             android:orientation="horizontal">
 
             <ImageView
+                android:tint="@android:color/darker_gray"
+                android:id="@+id/lembrete_imagem_tipo"
                 android:background="@drawable/ic_image_white_24dp"
                 android:layout_width="40dp"
                 android:layout_height="40dp" />
 
-            <TextView
-                android:textColor="@android:color/white"
-                android:textSize="16sp"
-                android:layout_marginLeft="10dp"
-                android:id="@+id/horario_titulo"
+            <LinearLayout
+                android:orientation="vertical"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Fotos dos slides"
-                android:textStyle="bold" />
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:textColor="@android:color/background_dark"
+                    android:textSize="16sp"
+                    android:layout_marginLeft="10dp"
+                    android:id="@+id/lembrete_titulo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Fotos dos slides"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:textColor="@android:color/background_dark"
+                    android:textSize="14sp"
+                    android:layout_marginLeft="10dp"
+                    android:id="@+id/lembrete_detalhes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Fotos dos slides" />
+            </LinearLayout>
 
         </LinearLayout>
 

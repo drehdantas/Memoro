@@ -13,8 +13,11 @@ public class Lembrete extends RealmObject {
     private String descricao;
     private String cor;
     private String type;
-    private long alarmeDia;
-    private long alarmeHora;
+    private String diaAlarme;
+    private String mesAlarme;
+    private String tempo;
+    private int hora;
+    private int minutos;
     private long horarioRelacionado;
     private boolean active = true;
 
@@ -53,21 +56,6 @@ public class Lembrete extends RealmObject {
         this.cor = cor;
     }
 
-    public long getAlarmeDia() {
-        return alarmeDia;
-    }
-
-    public void setAlarmeDia(long alarmeDia) {
-        this.alarmeDia = alarmeDia;
-    }
-
-    public long getAlarmeHora() {
-        return alarmeHora;
-    }
-
-    public void setAlarmeHora(long alarmeHora) {
-        this.alarmeHora = alarmeHora;
-    }
 
     public long getHorarioRelacionado() {
         return horarioRelacionado;
@@ -107,5 +95,45 @@ public class Lembrete extends RealmObject {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getDiaAlarme() {
+        return diaAlarme;
+    }
+
+    public void setDiaAlarme(String diaAlarme) {
+        this.diaAlarme = diaAlarme;
+    }
+
+    public String getMesAlarme() {
+        return mesAlarme;
+    }
+
+    public void setMesAlarme(String mesAlarme) {
+        this.mesAlarme = mesAlarme;
+    }
+
+    public String getTempo() {
+        return tempo;
+    }
+
+    public void setTempo(String tempo) {
+        this.tempo = tempo;
+    }
+
+    public int getHora() {
+        return hora;
+    }
+
+    public void setHora(int hora) {
+        this.hora = hora;
+    }
+
+    public int getMinutos() {
+        return minutos;
+    }
+
+    public void setMinutos(int minutos) {
+        this.minutos = minutos;
     }
 }

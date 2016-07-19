@@ -14,6 +14,8 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.github.clans.fab.FloatingActionMenu;
+import com.project.andredantas.memoro.model.Horario;
+import com.project.andredantas.memoro.model.dao.HorarioDAO;
 import com.project.andredantas.memoro.ui.horarios.HorariosFragment;
 import com.project.andredantas.memoro.ui.lembretes.CriarLembreteActivity;
 import com.project.andredantas.memoro.ui.lembretes.LembreteFragment;
@@ -24,11 +26,14 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.realm.Realm;
 
 public class MainActivity extends AppCompatActivity {
     private String[] tab_names;
     private List<String> mTabNames;
     public PagerAdapter mPagerAdapter;
+
+    private Realm realm = Realm.getDefaultInstance();
 
     @Bind(R.id.view_pager)
     ViewPager mPager;
@@ -46,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         initViewPager();
         initView();
+        horarioNenhum();
     }
 
     public void initView(){
@@ -77,6 +83,15 @@ public class MainActivity extends AppCompatActivity {
         });
 
         tabLayout.setupWithViewPager(mPager);
+    }
+
+    public void horarioNenhum(){
+        if (HorarioDAO.getById(1) == null){
+            Horario horarioNenhum = new Horario();
+            horarioNenhum.setId(1);
+            horarioNenhum.setTitulo("Nenhum");
+            HorarioDAO.saveHorario(realm, horarioNenhum);
+        }
     }
 
     @OnClick(R.id.fab_img)
@@ -141,5 +156,9 @@ public class MainActivity extends AppCompatActivity {
             menu.close(true);
         else
             super.onBackPressed();
+    }
+
+    public void closeMenu(){
+        menu.close(true);
     }
 }

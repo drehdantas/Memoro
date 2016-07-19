@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,7 +47,16 @@ public class LembretesAdapter extends RecyclerView.Adapter<LembretesAdapter.MyVi
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-
+        Lembrete lembrete = lembreteList.get(position);
+        holder.lembreteTitulo.setText(lembrete.getTitulo());
+        holder.lembreteDetalhes.setText(lembrete.getTempo() + " - " + lembrete.getDiaAlarme() + "/" + lembrete.getMesAlarme());
+        if (lembrete.getType().equals("texto")){
+            holder.lembreteImage.setImageDrawable(context.getDrawable(R.drawable.ic_text_format_white_24dp));
+        }else if (lembrete.getType().equals("imagem")){
+            holder.lembreteImage.setImageDrawable(context.getDrawable(R.drawable.ic_image_white_24dp));
+        }else if (lembrete.getType().equals("voz")){
+            holder.lembreteImage.setImageDrawable(context.getDrawable(R.drawable.ic_mic_white_24dp));
+        }
     }
 
     @Override
@@ -55,10 +65,12 @@ public class LembretesAdapter extends RecyclerView.Adapter<LembretesAdapter.MyVi
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder{
-//        @Bind(R.id.horario_titulo)
-//        TextView horarioTitulo;
-//        @Bind(R.id.horario_hora)
-//        TextView horarioHora;
+        @Bind(R.id.lembrete_titulo)
+        TextView lembreteTitulo;
+        @Bind(R.id.lembrete_detalhes)
+        TextView lembreteDetalhes;
+        @Bind(R.id.lembrete_imagem_tipo)
+        ImageView lembreteImage;
 
         public MyViewHolder(View itemView) {
             super(itemView);

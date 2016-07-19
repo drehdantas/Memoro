@@ -243,10 +243,20 @@
 
             </RelativeLayout>
 
-            <RelativeLayout
+
+            <Button
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="10dp"
                 android:layout_below="@+id/layout_types"
+                android:background="#FF7F7F"
+                android:id="@+id/apagar_lembrete"
+                android:textColor="@android:color/white"
+                android:text="Apagar Lembrete"
+                android:layout_alignParentBottom="true"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"/>
+                android:layout_height="40dp" />
 
         </RelativeLayout>
     </ScrollView>

@@ -37,9 +37,9 @@ public class LembreteDAO {
     public static Lembrete getById(long lembreteId){
         return Realm.getDefaultInstance().where(Lembrete.class).equalTo("id", lembreteId).findFirst();
     }
-    public static List<Horario> listLembretes(){
+    public static List<Lembrete> listLembretes(){
         return Realm.getDefaultInstance()
-                .where(Horario.class)
+                .where(Lembrete.class)
                 .equalTo("active", true)
                 .findAll();
     }
