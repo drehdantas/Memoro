@@ -26,6 +26,9 @@
         <activity
             android:name=".ui.horarios.CriarHorarioActivity"
             android:label="@string/title_activity_criar_horario"></activity>
+        <activity
+            android:name="com.soundcloud.android.crop.CropImageActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

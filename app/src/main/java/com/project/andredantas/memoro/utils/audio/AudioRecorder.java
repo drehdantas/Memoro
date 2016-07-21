@@ -1,5 +1,7 @@
 package com.project.andredantas.memoro.utils.audio;
 
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.util.Log;
 
@@ -17,9 +19,10 @@ import java.util.List;
  */
 public class AudioRecorder {
 
-    boolean recording;
+    boolean recording, playing;
     private MediaRecorder mRecorder = null;
     private String mFileName;
+    MediaPlayer mediaPlayer;
     static final String TAG = "Audio Record";
     List<File> tmpFiles = new ArrayList<>();
 
@@ -43,6 +46,7 @@ public class AudioRecorder {
         tmpFiles.add(filePath);
         Log.d(TAG, "audio path " + filePath);
         mFileName = filePath.toString();
+        recording = true;
 
         if(mRecorder != null){
             mRecorder.release();
@@ -64,7 +68,24 @@ public class AudioRecorder {
         }
 
         mRecorder.start();
-        recording = true;
+    }
+
+    public void playAudio(String file){
+        playing = true;
+        mediaPlayer = new MediaPlayer();
+
+        try {
+            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            mediaPlayer.setDataSource(file);
+            mediaPlayer.prepare();
+            mediaPlayer.start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public MediaPlayer getMediaPlayer(){
+        return mediaPlayer;
     }
 
     public void stopRecording() {
@@ -83,6 +104,10 @@ public class AudioRecorder {
             boolean delete = tmpFiles.get(i).delete();
         }
 
+    }
+
+    public String getmFileName(){
+        return mFileName;
     }
 
     public boolean isRecording() {
