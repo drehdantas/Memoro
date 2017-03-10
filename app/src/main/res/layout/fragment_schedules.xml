@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.horarios.HorariosFragment">
+    tools:context=".ui.schedules.SchedulesFragment">
 
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/myScrollingContent"
@@ -36,7 +36,7 @@
                         android:id="@+id/textView" />
 
                     <Button
-                        android:id="@+id/criar_seg"
+                        android:id="@+id/create_mon"
                         android:textAllCaps="false"
                         android:textSize="11sp"
                         android:textColor="@android:color/white"
@@ -49,7 +49,7 @@
                 </RelativeLayout>
 
                 <android.support.v7.widget.RecyclerView
-                    android:id="@+id/horarios_seg"
+                    android:id="@+id/schedule_mon"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingLeft="7dp">
@@ -78,7 +78,7 @@
                         android:text="Ter" />
 
                     <Button
-                        android:id="@+id/criar_ter"
+                        android:id="@+id/create_tue"
                         android:textAllCaps="false"
                         android:textSize="11sp"
                         android:textColor="@android:color/white"
@@ -91,7 +91,7 @@
                 </RelativeLayout>
 
                 <android.support.v7.widget.RecyclerView
-                    android:id="@+id/horarios_ter"
+                    android:id="@+id/schedule_tue"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingLeft="7dp">
@@ -120,7 +120,7 @@
                         android:text="Qua" />
 
                     <Button
-                        android:id="@+id/criar_qua"
+                        android:id="@+id/create_wed"
                         android:textAllCaps="false"
                         android:textSize="11sp"
                         android:textColor="@android:color/white"
@@ -133,7 +133,7 @@
                 </RelativeLayout>
 
                 <android.support.v7.widget.RecyclerView
-                    android:id="@+id/horarios_qua"
+                    android:id="@+id/schedule_wed"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingLeft="7dp">
@@ -162,7 +162,7 @@
                         android:text="Qui" />
 
                     <Button
-                        android:id="@+id/criar_qui"
+                        android:id="@+id/create_thu"
                         android:textAllCaps="false"
                         android:textSize="11sp"
                         android:textColor="@android:color/white"
@@ -175,7 +175,7 @@
                 </RelativeLayout>
 
                 <android.support.v7.widget.RecyclerView
-                    android:id="@+id/horarios_qui"
+                    android:id="@+id/schedule_thu"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingLeft="7dp">
@@ -204,7 +204,7 @@
                         android:text="Sex" />
 
                     <Button
-                        android:id="@+id/criar_sex"
+                        android:id="@+id/create_fri"
                         android:textAllCaps="false"
                         android:textSize="11sp"
                         android:textColor="@android:color/white"
@@ -217,7 +217,7 @@
                 </RelativeLayout>
 
                 <android.support.v7.widget.RecyclerView
-                    android:id="@+id/horarios_sex"
+                    android:id="@+id/schedule_fri"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingLeft="7dp">
@@ -246,7 +246,7 @@
                         android:text="Sab" />
 
                     <Button
-                        android:id="@+id/criar_sab"
+                        android:id="@+id/create_sat"
                         android:textAllCaps="false"
                         android:textSize="11sp"
                         android:textColor="@android:color/white"
@@ -259,7 +259,7 @@
                 </RelativeLayout>
 
                 <android.support.v7.widget.RecyclerView
-                    android:id="@+id/horarios_sab"
+                    android:id="@+id/schedule_sat"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingLeft="7dp">
@@ -288,7 +288,7 @@
                         android:text="Dom" />
 
                     <Button
-                        android:id="@+id/criar_dom"
+                        android:id="@+id/create_sun"
                         android:textAllCaps="false"
                         android:textSize="11sp"
                         android:textColor="@android:color/white"
@@ -301,7 +301,7 @@
                 </RelativeLayout>
 
                 <android.support.v7.widget.RecyclerView
-                    android:id="@+id/horarios_dom"
+                    android:id="@+id/schedule_sun"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingLeft="7dp">

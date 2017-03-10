@@ -10,4 +10,28 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_criar_lembrete">CriarLembreteActivity</string>
     <string name="title_activity_criar_horario">CriarHorarioActivity</string>
+
+    <string name="edit_reminder">Edit Reminder</string>
+    <string name="create_reminder">Create Reminder</string>
+    <string name="edit_schedule">Edit Schedule</string>
+    <string name="create_schedule">Create Schedule</string>
+    <string name="select_hour">Select a hour</string>
+    <string name="reminder_deleted_message">Reminder deleted successfully</string>
+    <string name="save">Save</string>
+    <string name="reminder_update_message">Reminder updated successfully</string>
+    <string name="reminder_create_message">Reminder created successfully</string>
+    <string name="none">None</string>
+    <string name="schedule_need_title">Schedule need a title</string>
+    <string name="schedule_update_message">Schedule updated successfully</string>
+    <string name="schedule_create_message">Schedule created successfully</string>
+    <string name="schedule_deleted_message">Schedule deleted successfully</string>
+
+    <string name="monday">Monday</string>
+    <string name="tuesday">Tuesday</string>
+    <string name="wednesday">Wednesday</string>
+    <string name="thursday">Thursday</string>
+    <string name="friday">Friday</string>
+    <string name="saturday">Saturday</string>
+    <string name="sunday">Sunday</string>
+
 </resources>

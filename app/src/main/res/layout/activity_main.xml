@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="com.project.andredantas.memoro.MainActivity">
+    tools:context="com.project.andredantas.memoro.ui.MainActivity">
 
     <RelativeLayout
         android:id="@+id/my_toolbar_component"
@@ -93,7 +93,7 @@
             android:layout_height="wrap_content"
             android:src="@drawable/ic_image_white_24dp"
             fab:fab_size="mini"
-            fab:fab_label="Lembrete de imagem" />
+            fab:fab_label="Lembrete de image" />
 
     </com.github.clans.fab.FloatingActionMenu>
 </RelativeLayout>

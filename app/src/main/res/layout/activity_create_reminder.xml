@@ -10,14 +10,14 @@
         android:layout_height="56dp">
 
         <android.support.v7.widget.Toolbar
-            android:id="@+id/lembrete_toolbar"
+            android:id="@+id/reminder_toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/colorPrimary"
             android:minHeight="56dp"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
             app:theme="@style/AppTheme"
-            app:titleTextColor="@android:color/white"></android.support.v7.widget.Toolbar>
+            app:titleTextColor="@android:color/white"/>
 
     </RelativeLayout>
 
@@ -37,7 +37,7 @@
                 android:orientation="vertical">
 
                 <EditText
-                    android:id="@+id/lembrete_titulo"
+                    android:id="@+id/reminder_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Lembrete"
@@ -45,7 +45,7 @@
                     android:singleLine="true" />
 
                 <EditText
-                    android:id="@+id/lembrete_resumo"
+                    android:id="@+id/reminder_descript"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
@@ -73,7 +73,7 @@
                     android:textSize="15sp" />
 
                 <com.jaredrummler.materialspinner.MaterialSpinner
-                    android:id="@+id/horarios_spinner"
+                    android:id="@+id/schedules_spinner"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
             </LinearLayout>
@@ -171,7 +171,7 @@
                     android:visibility="gone">
 
                     <com.project.andredantas.memoro.utils.audio.AudioRecordLayout
-                        android:id="@+id/activity_criar_lembrete_audio_layout"
+                        android:id="@+id/activity_create_reminder_audio_layout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"/>
 
@@ -179,7 +179,7 @@
 
 
                 <ImageView
-                    android:id="@+id/lembrete_imagem"
+                    android:id="@+id/reminder_image"
                     android:layout_width="match_parent"
                     android:layout_height="300dp"
                     android:layout_marginLeft="10dp"
@@ -187,7 +187,7 @@
                     android:visibility="gone" />
 
                 <RelativeLayout
-                    android:id="@+id/lembrete_imagem_layout"
+                    android:id="@+id/reminder_image_layout"
                     android:layout_width="match_parent"
                     android:layout_height="300dp"
                     android:layout_marginLeft="10dp"
@@ -251,7 +251,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_below="@+id/layout_types"
                 android:background="#FF7F7F"
-                android:id="@+id/apagar_lembrete"
+                android:id="@+id/delete_reminder"
                 android:textColor="@android:color/white"
                 android:text="Apagar Lembrete"
                 android:layout_alignParentBottom="true"

@@ -1,4 +1,4 @@
-package com.project.andredantas.memoro;
+package com.project.andredantas.memoro.ui;
 
 import android.content.Intent;
 import android.support.design.widget.TabLayout;
@@ -14,11 +14,12 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.github.clans.fab.FloatingActionMenu;
-import com.project.andredantas.memoro.model.Horario;
-import com.project.andredantas.memoro.model.dao.HorarioDAO;
-import com.project.andredantas.memoro.ui.horarios.HorariosFragment;
-import com.project.andredantas.memoro.ui.lembretes.CriarLembreteActivity;
-import com.project.andredantas.memoro.ui.lembretes.LembreteFragment;
+import com.project.andredantas.memoro.R;
+import com.project.andredantas.memoro.model.Schedule;
+import com.project.andredantas.memoro.model.dao.ScheduleDAO;
+import com.project.andredantas.memoro.ui.reminder.CreateReminderActivity;
+import com.project.andredantas.memoro.ui.schedules.SchedulesFragment;
+import com.project.andredantas.memoro.ui.reminder.ReminderFragment;
 
 import java.util.Arrays;
 import java.util.List;
@@ -51,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         initViewPager();
         initView();
-        horarioNenhum();
+        scheduleNone();
     }
 
     public void initView(){
@@ -85,33 +86,33 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(mPager);
     }
 
-    public void horarioNenhum(){
-        if (HorarioDAO.getById(1) == null){
-            Horario horarioNenhum = new Horario();
-            horarioNenhum.setId(1);
-            horarioNenhum.setTitulo("Nenhum");
-            HorarioDAO.saveHorario(realm, horarioNenhum);
+    public void scheduleNone(){
+        if (ScheduleDAO.getById(1) == null){
+            Schedule scheduleNenhum = new Schedule();
+            scheduleNenhum.setId(1);
+            scheduleNenhum.setTitle(getString(R.string.none));
+            ScheduleDAO.saveSchedule(realm, scheduleNenhum);
         }
     }
 
     @OnClick(R.id.fab_img)
-    public void lembreteImage(){
-        Intent intent = new Intent(this, CriarLembreteActivity.class);
-        intent.putExtra("tipo", "imagem");
+    public void reminderImage(){
+        Intent intent = new Intent(this, CreateReminderActivity.class);
+        intent.putExtra("type", "image");
         startActivity(intent);
     }
 
     @OnClick(R.id.fab_voice)
-    public void lembreteVoz(){
-        Intent intent = new Intent(this, CriarLembreteActivity.class);
-        intent.putExtra("tipo", "voz");
+    public void reminderVoice(){
+        Intent intent = new Intent(this, CreateReminderActivity.class);
+        intent.putExtra("type", "voice");
         startActivity(intent);
     }
 
     @OnClick(R.id.fab_text)
-    public void lembreteTexto(){
-        Intent intent = new Intent(this, CriarLembreteActivity.class);
-        intent.putExtra("tipo", "texto");
+    public void reminderText(){
+        Intent intent = new Intent(this, CreateReminderActivity.class);
+        intent.putExtra("type", "text");
         startActivity(intent);
     }
 
@@ -125,13 +126,13 @@ public class MainActivity extends AppCompatActivity {
             Fragment fragment;
             switch (position) {
                 case 0:
-                    fragment = new HorariosFragment();
+                    fragment = new SchedulesFragment();
                     break;
                 case 1:
-                    fragment = new LembreteFragment();
+                    fragment = new ReminderFragment();
                     break;
                 default:
-                    fragment = new HorariosFragment();
+                    fragment = new SchedulesFragment();
                     break;
             }
 

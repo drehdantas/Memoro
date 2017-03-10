@@ -2,10 +2,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.lembretes.LembreteFragment">
+    tools:context=".ui.reminder.ReminderFragment">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/lembretes_recycle"
+        android:id="@+id/reminder_recycle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 

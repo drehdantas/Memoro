@@ -4,7 +4,7 @@
     tools:context="sertanejo.musicfl.droid.ui.artist.ArtistActivity">
 
     <item android:id="@+id/action_check"
-        android:title="Save"
+        android:title="@string/save"
         android:orderInCategory="100"
         android:icon="@drawable/ic_check_white_24dp"
         app:showAsAction="always" />

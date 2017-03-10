@@ -13,7 +13,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".ui.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -21,11 +21,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.lembretes.CriarLembreteActivity"
+            android:name=".ui.reminder.CreateReminderActivity"
             android:label="@string/title_activity_criar_lembrete" />
         <activity
-            android:name=".ui.horarios.CriarHorarioActivity"
-            android:label="@string/title_activity_criar_horario"></activity>
+            android:name=".ui.schedules.CreateSchedulesActivity"
+            android:label="@string/title_activity_criar_horario"/>
         <activity
             android:name="com.soundcloud.android.crop.CropImageActivity"
             android:screenOrientation="portrait" />

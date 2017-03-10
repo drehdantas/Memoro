@@ -1,10 +1,9 @@
-package com.project.andredantas.memoro.ui.lembretes;
+package com.project.andredantas.memoro.ui.reminder;
 
 import android.Manifest;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.media.AudioRecord;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -30,16 +29,15 @@ import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.project.andredantas.memoro.R;
-import com.project.andredantas.memoro.model.Horario;
-import com.project.andredantas.memoro.model.Lembrete;
-import com.project.andredantas.memoro.model.dao.HorarioDAO;
-import com.project.andredantas.memoro.model.dao.LembreteDAO;
-import com.project.andredantas.memoro.ui.horarios.CriarHorarioActivity;
+import com.project.andredantas.memoro.model.Reminder;
+import com.project.andredantas.memoro.model.Schedule;
+import com.project.andredantas.memoro.model.dao.ScheduleDAO;
+import com.project.andredantas.memoro.model.dao.ReminderDAO;
+import com.project.andredantas.memoro.ui.schedules.CreateSchedulesActivity;
 import com.project.andredantas.memoro.utils.Constants;
 import com.project.andredantas.memoro.utils.DialogDateFragment;
 import com.project.andredantas.memoro.utils.DialogDatePickerListener;
 import com.project.andredantas.memoro.utils.audio.AudioRecordLayout;
-import com.project.andredantas.memoro.utils.audio.AudioRecorder;
 import com.soundcloud.android.crop.Crop;
 import com.squareup.picasso.Picasso;
 
@@ -47,7 +45,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -60,33 +57,33 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.realm.Realm;
 
-public class CriarLembreteActivity extends AppCompatActivity implements DialogDatePickerListener {
+public class CreateReminderActivity extends AppCompatActivity implements DialogDatePickerListener {
     private static int REQUEST_PICTURE = 1;
     private static int CAMERA_REQUEST_IMAGE_CAPTURE = 2;
     private static int selectedHour, selectedMinute;
 
     Calendar myCalendar = Calendar.getInstance();
-    private String tipo, tempo, dia, mes;
-    private Lembrete lembrete;
-    private List<Horario> listHorarios;
-    private Horario horarioEscolhido;
-    private ArrayList<String> listHorariosTitulos = new ArrayList<>();
+    private String type, time, day, month;
+    private Reminder reminder;
+    private List<Schedule> listSchedules;
+    private Schedule scheduleChosen;
+    private ArrayList<String> listSheduleTitles = new ArrayList<>();
     private Bitmap mImage;
     private String fileImage;
     private Realm realm = Realm.getDefaultInstance();
 
-    @Bind(R.id.lembrete_toolbar)
+    @Bind(R.id.reminder_toolbar)
     Toolbar toolbar;
-    @Bind(R.id.lembrete_titulo)
-    EditText lembreteTitulo;
-    @Bind(R.id.lembrete_resumo)
-    EditText lembreteResumo;
-    @Bind(R.id.lembrete_imagem)
-    ImageView lembreteImagem;
-    @Bind(R.id.lembrete_imagem_layout)
-    RelativeLayout lembreteImageLayout;
-    @Bind(R.id.horarios_spinner)
-    MaterialSpinner horariosSpinner;
+    @Bind(R.id.reminder_title)
+    EditText reminderTitle;
+    @Bind(R.id.reminder_descript)
+    EditText reminderDescript;
+    @Bind(R.id.reminder_image)
+    ImageView reminderImage;
+    @Bind(R.id.reminder_image_layout)
+    RelativeLayout reminderImageLayout;
+    @Bind(R.id.schedules_spinner)
+    MaterialSpinner schedulesSpinner;
     @Bind(R.id.click_time)
     LinearLayout clickTime;
     @Bind(R.id.click_data)
@@ -95,12 +92,12 @@ public class CriarLembreteActivity extends AppCompatActivity implements DialogDa
     TextView dataTime;
     @Bind(R.id.text_time)
     TextView textTime;
-    @Bind(R.id.apagar_lembrete)
-    Button apagarLembrete;
+    @Bind(R.id.delete_reminder)
+    Button deleteReminder;
 
     @Bind(R.id.voice_recorder_layout)
     RelativeLayout voiceRecorderLayout;
-    @Bind(R.id.activity_criar_lembrete_audio_layout)
+    @Bind(R.id.activity_create_reminder_audio_layout)
     AudioRecordLayout audioRecordLayout;
 
     boolean notDeleteFile = true;
@@ -108,7 +105,7 @@ public class CriarLembreteActivity extends AppCompatActivity implements DialogDa
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_criar_lembrete);
+        setContentView(R.layout.activity_create_reminder);
         ButterKnife.bind(this);
         onIntentReceived();
         initView();
@@ -120,35 +117,35 @@ public class CriarLembreteActivity extends AppCompatActivity implements DialogDa
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
-            getSupportActionBar().setTitle(lembrete != null ? "Editar Lembrete" : "Criar Lembrete");
+            getSupportActionBar().setTitle(reminder != null ? getString(R.string.edit_reminder) : getString(R.string.create_reminder));
         }
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
-        if (tipo.equals("imagem")) {
+        if (type.equals("image")) {
             voiceRecorderLayout.setVisibility(View.GONE);
-            lembreteImageLayout.setVisibility(View.VISIBLE);
-        } else if (tipo.equals("voz")) {
+            reminderImageLayout.setVisibility(View.VISIBLE);
+        } else if (type.equals("voice")) {
             voiceRecorderLayout.setVisibility(View.VISIBLE);
-            lembreteImageLayout.setVisibility(View.GONE);
-        } else if (tipo.equals("texto")) {
+            reminderImageLayout.setVisibility(View.GONE);
+        } else if (type.equals("text")) {
             voiceRecorderLayout.setVisibility(View.GONE);
-            lembreteImageLayout.setVisibility(View.GONE);
+            reminderImageLayout.setVisibility(View.GONE);
         }
 
-        listHorarios = HorarioDAO.listTodosHorarios();
-        if (listHorarios != null) {
-            for (int i = 0; i < listHorarios.size(); i++) {
-                listHorariosTitulos.add(listHorarios.get(i).getTitulo());
+        listSchedules = ScheduleDAO.listSchedules();
+        if (listSchedules != null) {
+            for (int i = 0; i < listSchedules.size(); i++) {
+                listSheduleTitles.add(listSchedules.get(i).getTitle());
             }
         }
 
-        horariosSpinner.setItems(listHorariosTitulos);
-        horariosSpinner.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
+        schedulesSpinner.setItems(listSheduleTitles);
+        schedulesSpinner.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
             @Override
             public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
-                for (int i = 0; i < listHorariosTitulos.size(); i++) {
-                    if (listHorariosTitulos.get(i).equals(item)) {
-                        horarioEscolhido = listHorarios.get(i);
+                for (int i = 0; i < listSheduleTitles.size(); i++) {
+                    if (listSheduleTitles.get(i).equals(item)) {
+                        scheduleChosen = listSchedules.get(i);
                     }
                 }
             }
@@ -163,45 +160,45 @@ public class CriarLembreteActivity extends AppCompatActivity implements DialogDa
                 int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
                 int minute = mcurrentTime.get(Calendar.MINUTE);
                 TimePickerDialog mTimePicker;
-                mTimePicker = new TimePickerDialog(CriarLembreteActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                mTimePicker = new TimePickerDialog(CreateReminderActivity.this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                        CriarLembreteActivity.selectedHour = selectedHour;
-                        CriarLembreteActivity.selectedMinute = selectedMinute;
-                        tempo = String.format("%02d:%02d", selectedHour, selectedMinute);
-                        textTime.setText(tempo);
+                        CreateReminderActivity.selectedHour = selectedHour;
+                        CreateReminderActivity.selectedMinute = selectedMinute;
+                        time = String.format("%02d:%02d", selectedHour, selectedMinute);
+                        textTime.setText(time);
                     }
                 }, hour, minute, true);//Yes 24 hour time
-                mTimePicker.setTitle("Selecione a hora");
+                mTimePicker.setTitle(getString(R.string.select_hour));
                 mTimePicker.show();
 
             }
         });
 
-        if (lembrete != null) {
-            textTime.setText(lembrete.getTempo());
-            lembreteTitulo.setText(lembrete.getTitulo());
-            lembreteResumo.setText(lembrete.getDescricao());
-            for (int i = 0; i < listHorariosTitulos.size(); i++) {
-                if (lembrete.getHorarioRelacionado() == listHorarios.get(i).getId()) {
-                    horariosSpinner.setSelectedIndex(i);
+        if (reminder != null) {
+            textTime.setText(reminder.getTime());
+            reminderTitle.setText(reminder.getTitle());
+            reminderDescript.setText(reminder.getDescript());
+            for (int i = 0; i < listSheduleTitles.size(); i++) {
+                if (reminder.getScheduleRelated() == listSchedules.get(i).getId()) {
+                    schedulesSpinner.setSelectedIndex(i);
                 }
             }
-            audioRecordLayout.setFilePath(lembrete.getAudio());
-            if (lembrete.getImagem() != null) {
-                lembreteImagem.setVisibility(View.VISIBLE);
-                lembreteImageLayout.setVisibility(View.GONE);
-                File filePath = new File(lembrete.getImagem());
+            audioRecordLayout.setFilePath(reminder.getAudio());
+            if (reminder.getImage() != null) {
+                reminderImage.setVisibility(View.VISIBLE);
+                reminderImageLayout.setVisibility(View.GONE);
+                File filePath = new File(reminder.getImage());
 
                 Picasso.with(this)
                         .load(filePath)
-                        .into(lembreteImagem);
+                        .into(reminderImage);
             }
-            apagarLembrete.setVisibility(View.VISIBLE);
-            CriarHorarioActivity.setTextWithCursosFinal(lembreteTitulo);
-            CriarHorarioActivity.setTextWithCursosFinal(lembreteResumo);
+            deleteReminder.setVisibility(View.VISIBLE);
+            CreateSchedulesActivity.setTextWithCursorFinal(reminderTitle);
+            CreateSchedulesActivity.setTextWithCursorFinal(reminderDescript);
         } else {
-            apagarLembrete.setVisibility(View.GONE);
+            deleteReminder.setVisibility(View.GONE);
             selectedHour = new Time(System.currentTimeMillis()).getHours();
             selectedMinute = new Time(System.currentTimeMillis()).getMinutes();
             String curTime = String.format("%02d:%02d", selectedHour, selectedMinute);
@@ -209,28 +206,28 @@ public class CriarLembreteActivity extends AppCompatActivity implements DialogDa
             setData(myCalendar);
         }
 
-        audioRecordLayout.prepareForPlay(lembrete != null);
+        audioRecordLayout.prepareForPlay(reminder != null);
 
 
     }
 
-    @OnClick(R.id.apagar_lembrete)
-    public void apagarHorario() {
-        LembreteDAO.deleteLembrete(realm, lembrete);
+    @OnClick(R.id.delete_reminder)
+    public void deleteReminder() {
+        ReminderDAO.deleteReminder(realm, reminder);
         finish();
-        Toast.makeText(this, "Lembrete apagado com sucesso", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, getString(R.string.reminder_deleted_message), Toast.LENGTH_LONG).show();
     }
 
     @OnClick(R.id.click_data)
     public void onClickData() {
         FragmentManager fm = getSupportFragmentManager();
         DialogDateFragment popup = new DialogDateFragment();
-        popup.setListenerDatePicker(CriarLembreteActivity.this, myCalendar.get(Calendar.DAY_OF_MONTH) + "/" + (myCalendar.get(Calendar.MONTH) + 1) + "/" + myCalendar.get(Calendar.YEAR));
-        popup.show(fm, "datanascimento");
+        popup.setListenerDatePicker(CreateReminderActivity.this, myCalendar.get(Calendar.DAY_OF_MONTH) + "/" + (myCalendar.get(Calendar.MONTH) + 1) + "/" + myCalendar.get(Calendar.YEAR));
+        popup.show(fm, "");
     }
 
     @OnClick(R.id.click_galeria)
-    public void pickClickGaleria() {
+    public void pickClickGallery() {
         new TedPermission(this)
                 .setPermissionListener(new PermissionListener() {
                     @Override
@@ -261,19 +258,19 @@ public class CriarLembreteActivity extends AppCompatActivity implements DialogDa
     public void onIntentReceived() {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            if (extras.getString("tipo") != null) {
-                tipo = extras.getString("tipo");
+            if (extras.getString("type") != null) {
+                type = extras.getString("type");
             }
-            if (extras.getLong("lembrete") != 0) {
-                long lembreteId = extras.getLong("lembrete");
-                lembrete = LembreteDAO.getById(lembreteId);
+            if (extras.getLong("reminder") != 0) {
+                long lembreteId = extras.getLong("reminder");
+                reminder = ReminderDAO.getById(lembreteId);
             }
         }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_horario, menu);
+        getMenuInflater().inflate(R.menu.menu, menu);
         return true;
     }
 
@@ -290,12 +287,12 @@ public class CriarLembreteActivity extends AppCompatActivity implements DialogDa
             case R.id.action_check:
                 notDeleteFile = false;
 
-                if (lembreteTitulo.getText().toString().equals("") || lembreteTitulo.getText() == null) {
-                    Snackbar.make(this.findViewById(android.R.id.content), "Lembrete precisa de um título pelo menos", Snackbar.LENGTH_SHORT).show();
+                if (reminderTitle.getText().toString().equals("") || reminderTitle.getText() == null) {
+                    Snackbar.make(this.findViewById(android.R.id.content), "Reminder need a title", Snackbar.LENGTH_SHORT).show();
                 } else {
-                    if (tipo.equals("voz")) {
+                    if (type.equals("voice")) {
                         if (!audioRecordLayout.isStopped()) {
-                            Snackbar.make(this.findViewById(android.R.id.content), "Pause antes de salvar", Snackbar.LENGTH_SHORT).show();
+                            Snackbar.make(this.findViewById(android.R.id.content), "Pause before saving", Snackbar.LENGTH_SHORT).show();
                         } else {
                             editOrSave();
                         }
@@ -310,46 +307,46 @@ public class CriarLembreteActivity extends AppCompatActivity implements DialogDa
     }
 
     public void editOrSave() {
-        if (lembrete != null) {
-            //editar lembrete
-            lembrete = setDataLembrete(lembrete);
-            LembreteDAO.updateLembrete(realm, lembrete);
+        if (reminder != null) {
+            //edit reminder
+            reminder = setDataLembrete(reminder);
+            ReminderDAO.updateReminder(realm, reminder);
             finish();
-            Toast.makeText(this, "Lembrete atualizado com sucesso", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(R.string.reminder_update_message), Toast.LENGTH_LONG).show();
         } else {
-            //criar um lembrete
-            lembrete = new Lembrete();
-            lembrete = setDataLembrete(lembrete);
-            LembreteDAO.saveLembrete(realm, lembrete);
+            //create a reminder
+            reminder = new Reminder();
+            reminder = setDataLembrete(reminder);
+            ReminderDAO.saveReminder(realm, reminder);
             finish();
-            Toast.makeText(this, "Lembrete criado com sucesso", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(R.string.reminder_create_message), Toast.LENGTH_LONG).show();
         }
     }
 
-    public Lembrete setDataLembrete(Lembrete lembrete) {
+    public Reminder setDataLembrete(Reminder reminder) {
         realm.beginTransaction();
-        lembrete.setTitulo(lembreteTitulo.getText().toString());
-        lembrete.setDescricao(lembreteResumo.getText().toString());
-        lembrete.setHorarioRelacionado(horarioEscolhido != null ? horarioEscolhido.getId() : 1);
+        reminder.setTitle(reminderTitle.getText().toString());
+        reminder.setDescript(reminderDescript.getText().toString());
+        reminder.setScheduleRelated(scheduleChosen != null ? scheduleChosen.getId() : 1);
 
-        lembrete.setHora(selectedHour);
-        lembrete.setMinutos(selectedMinute);
-        lembrete.setTempo(String.format("%02d:%02d", selectedHour, selectedMinute));
-        lembrete.setDiaAlarme(dia);
-        lembrete.setMesAlarme(mes);
+        reminder.setHour(selectedHour);
+        reminder.setMinutes(selectedMinute);
+        reminder.setTime(String.format("%02d:%02d", selectedHour, selectedMinute));
+        reminder.setDayAlarm(day);
+        reminder.setMonthAlarm(month);
 
         if (audioRecordLayout.isStopped()) {
-            lembrete.setAudio(audioRecordLayout.getFilePath());
+            reminder.setAudio(audioRecordLayout.getFilePath());
         }
         if (fileImage != null) {
-            lembrete.setImagem(fileImage);
+            reminder.setImage(fileImage);
         }
 
-        lembrete.setType(tipo);
-        lembrete.setId(System.currentTimeMillis());
+        reminder.setType(type);
+        reminder.setId(System.currentTimeMillis());
         realm.commitTransaction();
 
-        return lembrete;
+        return reminder;
     }
 
     @Override
@@ -358,18 +355,18 @@ public class CriarLembreteActivity extends AppCompatActivity implements DialogDa
     }
 
     public void setData(Calendar c) {
-        dia = String.valueOf(c.get(Calendar.DAY_OF_MONTH));
-        mes = String.valueOf((c.get(Calendar.MONTH) + 1));
+        day = String.valueOf(c.get(Calendar.DAY_OF_MONTH));
+        month = String.valueOf((c.get(Calendar.MONTH) + 1));
 //        String ano = String.valueOf(c.get(Calendar.YEAR));
 
         if (c.get(Calendar.DAY_OF_MONTH) < 10) {
-            dia = '0' + String.valueOf(c.get(Calendar.DAY_OF_MONTH));
+            day = '0' + String.valueOf(c.get(Calendar.DAY_OF_MONTH));
         }
         if ((c.get(Calendar.MONTH) + 1) < 10) {
-            mes = '0' + String.valueOf((c.get(Calendar.MONTH) + 1));
+            month = '0' + String.valueOf((c.get(Calendar.MONTH) + 1));
         }
 
-        dataTime.setText(dia + "/" + mes);
+        dataTime.setText(day + "/" + month);
     }
 
     @Override
@@ -417,10 +414,10 @@ public class CriarLembreteActivity extends AppCompatActivity implements DialogDa
         } catch (Exception e) {
             e.printStackTrace();
         }
-        lembreteImagem.setVisibility(View.VISIBLE);
-        lembreteImageLayout.setVisibility(View.GONE);
+        reminderImage.setVisibility(View.VISIBLE);
+        reminderImageLayout.setVisibility(View.GONE);
         Picasso.with(this)
                 .load(file)
-                .into(lembreteImagem);
+                .into(reminderImage);
     }
 }
