@@ -1,0 +1,56 @@
+<resources>
+    <string name="app_name">Memoro</string>
+
+    <string-array name="tabs">
+        <item>Horários</item>
+        <item>Lembretes</item>
+    </string-array>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_criar_lembrete">CriarLembreteActivity</string>
+    <string name="title_activity_criar_horario">CriarHorarioActivity</string>
+
+    <string name="edit_reminder">Alterar Lembrete</string>
+    <string name="create_reminder">Criar Lembrete</string>
+    <string name="edit_schedule">Alterar Horário</string>
+    <string name="create_schedule">Criar Horário</string>
+    <string name="select_hour">Selecione uma hora</string>
+    <string name="reminder_deleted_message">Lembrete apagado com sucesso</string>
+    <string name="save">Salvar</string>
+    <string name="reminder_update_message">Lembrete alterado com sucesso</string>
+    <string name="reminder_create_message">Lembrete criado com sucesso</string>
+    <string name="none">Nenhum</string>
+    <string name="schedule_need_title">Horário precissa de um título</string>
+    <string name="schedule_update_message">Horário alterado com sucesso</string>
+    <string name="schedule_create_message">Horário criado com sucesso</string>
+    <string name="schedule_deleted_message">Horário apagado com sucesso</string>
+
+    <string name="descript">Descrição</string>
+    <string name="schedule">Horário</string>
+    <string name="reminder">Lembrete</string>
+    <string name="relate_to_a_schedule">Relaciona a um Horário:</string>
+    <string name="day">Dia</string>
+    <string name="camera_photo">Foto da Câmera</string>
+    <string name="gallery_photo">Foto da Galeria</string>
+    <string name="delete_reminder">Apagar Lembrete</string>
+    <string name="delete_schedule">Apagar Horário</string>
+    <string name="voice_reminder">Lembrete de Voz</string>
+    <string name="text_reminder">Lembrete de Texto</string>
+    <string name="image_reminder">Lembrete de Imagem</string>
+
+    <string name="monday">Segunda</string>
+    <string name="tuesday">Terça</string>
+    <string name="wednesday">Quarta</string>
+    <string name="thursday">Quinta</string>
+    <string name="friday">Sexta</string>
+    <string name="saturday">Sábado</string>
+    <string name="sunday">Domingo</string>
+        <string name="touch_to_listen">Toque para escutar</string>
+    <string name="choose_the_date">Escolha a data</string>
+    <string name="cancel">Cancelar</string>
+    <string name="ok">Ok</string>
+    <string name="start_recording">Começar a gravar</string>
+    <string name="time">Hora</string>
+
+</resources>

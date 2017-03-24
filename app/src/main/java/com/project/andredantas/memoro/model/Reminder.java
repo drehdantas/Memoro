@@ -13,8 +13,8 @@ public class Reminder extends RealmObject {
     private String descript;
     private String color;
     private String type;
-    private String dayAlarm;
-    private String monthAlarm;
+    private int dayAlarm;
+    private int monthAlarm;
     private String time;
     private int hour;
     private int minutes;
@@ -97,19 +97,19 @@ public class Reminder extends RealmObject {
         this.type = type;
     }
 
-    public String getDayAlarm() {
+    public int getDayAlarm() {
         return dayAlarm;
     }
 
-    public void setDayAlarm(String dayAlarm) {
+    public void setDayAlarm(int dayAlarm) {
         this.dayAlarm = dayAlarm;
     }
 
-    public String getMonthAlarm() {
+    public int getMonthAlarm() {
         return monthAlarm;
     }
 
-    public void setMonthAlarm(String monthAlarm) {
+    public void setMonthAlarm(int monthAlarm) {
         this.monthAlarm = monthAlarm;
     }
 

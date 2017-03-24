@@ -32,7 +32,7 @@
                         android:layout_centerVertical="true"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Seg"
+                        android:text="@string/monday"
                         android:id="@+id/textView" />
 
                     <Button
@@ -42,7 +42,7 @@
                         android:textColor="@android:color/white"
                         android:textStyle="normal"
                         android:background="@color/colorPrimaryDark"
-                        android:text="Criar Horário"
+                        android:text="@string/create_schedule"
                         android:layout_width="wrap_content"
                         android:layout_height="25dp"
                         android:layout_alignParentEnd="true" />
@@ -75,7 +75,7 @@
                         android:layout_centerVertical="true"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Ter" />
+                        android:text="@string/tuesday" />
 
                     <Button
                         android:id="@+id/create_tue"
@@ -84,7 +84,7 @@
                         android:textColor="@android:color/white"
                         android:textStyle="normal"
                         android:background="@color/colorPrimaryDark"
-                        android:text="Criar Horário"
+                        android:text="@string/create_schedule"
                         android:layout_width="wrap_content"
                         android:layout_height="25dp"
                         android:layout_alignParentEnd="true" />
@@ -117,7 +117,7 @@
                         android:layout_centerVertical="true"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Qua" />
+                        android:text="@string/wednesday" />
 
                     <Button
                         android:id="@+id/create_wed"
@@ -126,7 +126,7 @@
                         android:textColor="@android:color/white"
                         android:textStyle="normal"
                         android:background="@color/colorPrimaryDark"
-                        android:text="Criar Horário"
+                        android:text="@string/create_schedule"
                         android:layout_width="wrap_content"
                         android:layout_height="25dp"
                         android:layout_alignParentEnd="true" />
@@ -159,7 +159,7 @@
                         android:layout_centerVertical="true"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Qui" />
+                        android:text="@string/thursday" />
 
                     <Button
                         android:id="@+id/create_thu"
@@ -168,7 +168,7 @@
                         android:textColor="@android:color/white"
                         android:textStyle="normal"
                         android:background="@color/colorPrimaryDark"
-                        android:text="Criar Horário"
+                        android:text="@string/create_schedule"
                         android:layout_width="wrap_content"
                         android:layout_height="25dp"
                         android:layout_alignParentEnd="true" />
@@ -201,7 +201,7 @@
                         android:layout_centerVertical="true"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Sex" />
+                        android:text="@string/friday" />
 
                     <Button
                         android:id="@+id/create_fri"
@@ -210,7 +210,7 @@
                         android:textColor="@android:color/white"
                         android:textStyle="normal"
                         android:background="@color/colorPrimaryDark"
-                        android:text="Criar Horário"
+                        android:text="@string/create_schedule"
                         android:layout_width="wrap_content"
                         android:layout_height="25dp"
                         android:layout_alignParentEnd="true" />
@@ -243,7 +243,7 @@
                         android:layout_centerVertical="true"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Sab" />
+                        android:text="@string/saturday" />
 
                     <Button
                         android:id="@+id/create_sat"
@@ -252,7 +252,7 @@
                         android:textColor="@android:color/white"
                         android:textStyle="normal"
                         android:background="@color/colorPrimaryDark"
-                        android:text="Criar Horário"
+                        android:text="@string/create_schedule"
                         android:layout_width="wrap_content"
                         android:layout_height="25dp"
                         android:layout_alignParentEnd="true" />
@@ -285,7 +285,7 @@
                         android:layout_centerVertical="true"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Dom" />
+                        android:text="@string/sunday" />
 
                     <Button
                         android:id="@+id/create_sun"
@@ -294,7 +294,7 @@
                         android:textColor="@android:color/white"
                         android:textStyle="normal"
                         android:background="@color/colorPrimaryDark"
-                        android:text="Criar Horário"
+                        android:text="@string/create_schedule"
                         android:layout_width="wrap_content"
                         android:layout_height="25dp"
                         android:layout_alignParentEnd="true" />

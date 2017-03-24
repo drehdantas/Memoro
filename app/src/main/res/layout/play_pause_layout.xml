@@ -16,7 +16,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Toque para escutar"
+        android:text="@string/touch_to_listen"
         android:layout_below="@+id/play_pause_button"
         android:layout_centerHorizontal="true"/>
 

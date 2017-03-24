@@ -28,7 +28,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
             <LinearLayout
                 android:id="@+id/component_layout"
                 android:layout_width="match_parent"
@@ -40,7 +40,7 @@
                     android:id="@+id/reminder_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Lembrete"
+                    android:hint="@string/reminder"
                     android:maxLines="1"
                     android:singleLine="true" />
 
@@ -49,7 +49,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:hint="Descrição"
+                    android:hint="@string/descript"
                     android:maxLines="10" />
 
             </LinearLayout>
@@ -68,7 +68,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Relacionar com um horário:"
+                    android:text="@string/relate_to_a_schedule"
                     android:textColor="@android:color/black"
                     android:textSize="15sp" />
 
@@ -93,7 +93,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Horário:"
+                    android:text="@string/time"
                     android:textColor="@android:color/background_dark"
                     android:textSize="15sp" />
 
@@ -127,7 +127,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Dia:"
+                    android:text="@string/day"
                     android:textColor="@android:color/background_dark"
                     android:textSize="15sp" />
 
@@ -213,7 +213,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Foto da Câmera"
+                            android:text="@string/camera_photo"
                             android:tint="@android:color/darker_gray" />
                     </LinearLayout>
 
@@ -236,7 +236,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Foto da Galeria"
+                            android:text="@string/gallery_photo"
                             android:tint="@android:color/darker_gray" />
                     </LinearLayout>
                 </RelativeLayout>
@@ -253,7 +253,7 @@
                 android:background="#FF7F7F"
                 android:id="@+id/delete_reminder"
                 android:textColor="@android:color/white"
-                android:text="Apagar Lembrete"
+                android:text="@string/delete_reminder"
                 android:layout_alignParentBottom="true"
                 android:layout_width="match_parent"
                 android:layout_height="40dp" />

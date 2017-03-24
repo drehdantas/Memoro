@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.project.andredantas.memoro.R;
 import com.project.andredantas.memoro.model.Schedule;
+import com.project.andredantas.memoro.model.ScheduleNormal;
 import com.project.andredantas.memoro.model.dao.ScheduleDAO;
 
 import java.sql.Time;
@@ -143,14 +144,15 @@ public class CreateSchedulesActivity extends AppCompatActivity {
                 } else {
                     if (schedule != null) {
                         //edit schedule
-                        schedule = setDataHorario(schedule);
+                        schedule = ScheduleNormal.copyFromNormal(setSchedule(new ScheduleNormal(), false));
                         ScheduleDAO.updateSchedule(realm, schedule);
                         finish();
                         Toast.makeText(this, getString(R.string.schedule_update_message), Toast.LENGTH_LONG).show();
                     } else {
                         //create schedule
                         schedule = new Schedule();
-                        schedule = setDataHorario(schedule);
+                        schedule = ScheduleNormal.copyFromNormal(setSchedule(new ScheduleNormal(), true));
+
                         ScheduleDAO.saveSchedule(realm, schedule);
                         finish();
                         Toast.makeText(this, getString(R.string.schedule_create_message), Toast.LENGTH_LONG).show();
@@ -163,14 +165,16 @@ public class CreateSchedulesActivity extends AppCompatActivity {
     }
 
     @OnClick(R.id.delete_schedule)
-    public void apagarHorario(){
+    public void deleteSchedule(){
         ScheduleDAO.deleteSchedule(realm, schedule);
         finish();
         Toast.makeText(this, getString(R.string.schedule_deleted_message), Toast.LENGTH_LONG).show();
     }
 
-    public Schedule setDataHorario(Schedule schedule) {
-        realm.beginTransaction();
+    public ScheduleNormal setSchedule(ScheduleNormal schedule, boolean create) {
+        if (create)
+            schedule.setId(System.currentTimeMillis());
+
         schedule.setTitle(scheduleTitle.getText().toString());
         schedule.setDescript(scheduleDescript.getText().toString());
         schedule.setDay(day);
@@ -178,9 +182,6 @@ public class CreateSchedulesActivity extends AppCompatActivity {
         schedule.setHour(selectedHour);
         schedule.setMinutes(selectedMinute);
         schedule.setTime(time);
-
-        schedule.setId(System.currentTimeMillis());
-        realm.commitTransaction();
 
         return schedule;
     }

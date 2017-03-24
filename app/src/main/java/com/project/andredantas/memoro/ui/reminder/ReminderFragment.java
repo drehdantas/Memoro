@@ -46,7 +46,7 @@ public class ReminderFragment extends Fragment implements ReminderAdapter.OnRemi
     public void onResume() {
         super.onResume();
         ((MainActivity) getActivity()).closeMenu();
-        listReminder = ReminderDAO.listLembretes();
+        listReminder = ReminderDAO.listReminders();
         reminderRecycle.setAdapter(new ReminderAdapter(getActivity(), listReminder, this));
         reminderRecycle.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
     }

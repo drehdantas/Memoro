@@ -25,7 +25,6 @@ public class DialogDateFragment extends DialogFragment implements
 
     private NumberPicker pickerDiaNascimento;
     private NumberPicker pickerMesNascimento;
-//    private NumberPicker pickerAnoNascimento;
     private TextView dataNascimentoATual;
     private TextView erroData;
     private Button positiveButton;

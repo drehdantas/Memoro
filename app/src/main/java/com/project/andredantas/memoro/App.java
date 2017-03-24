@@ -24,8 +24,7 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         instance = this;
-        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(this).build();
-        Realm.setDefaultConfiguration(realmConfiguration);
+        Realm.init(getBaseContext());
         gson = new GsonBuilder().setDateFormat(dateFormat).create();
 
         setupGson();

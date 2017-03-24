@@ -121,19 +121,19 @@ public class ScheduleNormal {
         return schedulesRealm;
     }
 
-    private static Schedule copyFromNormal(ScheduleNormal scheduleNormal){
+    public static Schedule copyFromNormal(ScheduleNormal scheduleNormal){
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
         Schedule schedule = new Schedule();
-        scheduleNormal.setActive(schedule.isActive());
-        scheduleNormal.setMinutes(schedule.getMinutes());
-        scheduleNormal.setHour(schedule.getHour());
-        scheduleNormal.setDay(schedule.getDay());
-        scheduleNormal.setColor(schedule.getColor());
-        scheduleNormal.setDescript(schedule.getDescript());
-        scheduleNormal.setId(schedule.getId());
-        scheduleNormal.setTime(schedule.getTime());
-        scheduleNormal.setTitle(schedule.getTitle());
+        schedule.setActive(scheduleNormal.isActive());
+        schedule.setMinutes(scheduleNormal.getMinutes());
+        schedule.setHour(scheduleNormal.getHour());
+        schedule.setDay(scheduleNormal.getDay());
+        schedule.setColor(scheduleNormal.getColor());
+        schedule.setDescript(scheduleNormal.getDescript());
+        schedule.setId(scheduleNormal.getId());
+        schedule.setTime(scheduleNormal.getTime());
+        schedule.setTitle(scheduleNormal.getTitle());
         realm.commitTransaction();
         return schedule;
     }

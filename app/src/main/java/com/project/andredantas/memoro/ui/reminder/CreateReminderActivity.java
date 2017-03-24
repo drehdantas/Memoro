@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -35,11 +34,10 @@ import com.project.andredantas.memoro.model.dao.ScheduleDAO;
 import com.project.andredantas.memoro.model.dao.ReminderDAO;
 import com.project.andredantas.memoro.ui.schedules.CreateSchedulesActivity;
 import com.project.andredantas.memoro.utils.Constants;
-import com.project.andredantas.memoro.utils.DialogDateFragment;
-import com.project.andredantas.memoro.utils.DialogDatePickerListener;
 import com.project.andredantas.memoro.utils.audio.AudioRecordLayout;
 import com.soundcloud.android.crop.Crop;
 import com.squareup.picasso.Picasso;
+import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -57,13 +55,14 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.realm.Realm;
 
-public class CreateReminderActivity extends AppCompatActivity implements DialogDatePickerListener {
+public class CreateReminderActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
     private static int REQUEST_PICTURE = 1;
     private static int CAMERA_REQUEST_IMAGE_CAPTURE = 2;
     private static int selectedHour, selectedMinute;
 
     Calendar myCalendar = Calendar.getInstance();
-    private String type, time, day, month;
+    private String type, time;
+    private int day, month;
     private Reminder reminder;
     private List<Schedule> listSchedules;
     private Schedule scheduleChosen;
@@ -203,7 +202,10 @@ public class CreateReminderActivity extends AppCompatActivity implements DialogD
             selectedMinute = new Time(System.currentTimeMillis()).getMinutes();
             String curTime = String.format("%02d:%02d", selectedHour, selectedMinute);
             textTime.setText(curTime);
-            setData(myCalendar);
+
+            day = myCalendar.get(Calendar.DAY_OF_MONTH);
+            month = myCalendar.get(Calendar.MONTH) + 1;
+            setDataTime(day, month);
         }
 
         audioRecordLayout.prepareForPlay(reminder != null);
@@ -220,10 +222,14 @@ public class CreateReminderActivity extends AppCompatActivity implements DialogD
 
     @OnClick(R.id.click_data)
     public void onClickData() {
-        FragmentManager fm = getSupportFragmentManager();
-        DialogDateFragment popup = new DialogDateFragment();
-        popup.setListenerDatePicker(CreateReminderActivity.this, myCalendar.get(Calendar.DAY_OF_MONTH) + "/" + (myCalendar.get(Calendar.MONTH) + 1) + "/" + myCalendar.get(Calendar.YEAR));
-        popup.show(fm, "");
+        DatePickerDialog dpd = DatePickerDialog.newInstance(
+                CreateReminderActivity.this,
+                myCalendar.get(Calendar.YEAR),
+                myCalendar.get(Calendar.MONTH),
+                myCalendar.get(Calendar.DAY_OF_MONTH)
+        );
+        dpd.setVersion(DatePickerDialog.Version.VERSION_2);
+        dpd.show(getFragmentManager(), "Datepickerdialog");
     }
 
     @OnClick(R.id.click_galeria)
@@ -309,21 +315,21 @@ public class CreateReminderActivity extends AppCompatActivity implements DialogD
     public void editOrSave() {
         if (reminder != null) {
             //edit reminder
-            reminder = setDataLembrete(reminder);
+            reminder = setDataReminder(reminder);
             ReminderDAO.updateReminder(realm, reminder);
             finish();
             Toast.makeText(this, getString(R.string.reminder_update_message), Toast.LENGTH_LONG).show();
         } else {
             //create a reminder
             reminder = new Reminder();
-            reminder = setDataLembrete(reminder);
+            reminder = setDataReminder(reminder);
             ReminderDAO.saveReminder(realm, reminder);
             finish();
             Toast.makeText(this, getString(R.string.reminder_create_message), Toast.LENGTH_LONG).show();
         }
     }
 
-    public Reminder setDataLembrete(Reminder reminder) {
+    public Reminder setDataReminder(Reminder reminder) {
         realm.beginTransaction();
         reminder.setTitle(reminderTitle.getText().toString());
         reminder.setDescript(reminderDescript.getText().toString());
@@ -347,26 +353,6 @@ public class CreateReminderActivity extends AppCompatActivity implements DialogD
         realm.commitTransaction();
 
         return reminder;
-    }
-
-    @Override
-    public void onFinishPopupDataHorario(Calendar c) {
-        setData(c);
-    }
-
-    public void setData(Calendar c) {
-        day = String.valueOf(c.get(Calendar.DAY_OF_MONTH));
-        month = String.valueOf((c.get(Calendar.MONTH) + 1));
-//        String ano = String.valueOf(c.get(Calendar.YEAR));
-
-        if (c.get(Calendar.DAY_OF_MONTH) < 10) {
-            day = '0' + String.valueOf(c.get(Calendar.DAY_OF_MONTH));
-        }
-        if ((c.get(Calendar.MONTH) + 1) < 10) {
-            month = '0' + String.valueOf((c.get(Calendar.MONTH) + 1));
-        }
-
-        dataTime.setText(day + "/" + month);
     }
 
     @Override
@@ -419,5 +405,26 @@ public class CreateReminderActivity extends AppCompatActivity implements DialogD
         Picasso.with(this)
                 .load(file)
                 .into(reminderImage);
+    }
+
+    public void setDataTime(int day, int month){
+        String dayText = String.valueOf(day);
+        if (day < 10) {
+            dayText = '0' + String.valueOf(day);
+        }
+
+        String monthText = String.valueOf(month);
+        if (month < 10) {
+            monthText = '0' + String.valueOf((month));
+        }
+
+        dataTime.setText(dayText + "/" + monthText);
+    }
+
+    @Override
+    public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
+        day = dayOfMonth;
+        month =  monthOfYear + 1;
+        setDataTime(dayOfMonth, monthOfYear + 1);
     }
 }

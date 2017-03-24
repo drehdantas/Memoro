@@ -16,7 +16,7 @@
         android:id="@+id/voice_record_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Começar a gravar"
+        android:text="@string/start_recording"
         android:layout_below="@+id/voice_record_button"
         android:layout_centerHorizontal="true"/>
 

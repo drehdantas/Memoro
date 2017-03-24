@@ -19,7 +19,7 @@
             android:minHeight="56dp"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
             app:theme="@style/AppTheme"
-            app:titleTextColor="@android:color/white"></android.support.v7.widget.Toolbar>
+            app:titleTextColor="@android:color/white"/>
 
     </RelativeLayout>
 
@@ -39,7 +39,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Dia:"
+                android:text="@string/day"
                 android:textColor="@android:color/background_dark"
                 android:textSize="18sp" />
 
@@ -59,7 +59,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:hint="Compromisso"
+            android:hint="@string/schedule"
             android:maxLines="1"
             android:singleLine="true" />
 
@@ -68,7 +68,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:hint="Descrição"
+            android:hint="@string/descript"
             android:maxLines="10" />
 
         <LinearLayout
@@ -82,7 +82,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Horário:"
+                android:text="@string/schedule"
                 android:textColor="@android:color/background_dark"
                 android:textSize="18sp" />
 
@@ -118,7 +118,7 @@
         android:background="#FF7F7F"
         android:id="@+id/delete_schedule"
         android:textColor="@android:color/white"
-        android:text="Apagar Horário"
+        android:text="@string/delete_schedule"
         android:layout_alignParentBottom="true"
         android:layout_margin="10dp"
         android:layout_width="match_parent"

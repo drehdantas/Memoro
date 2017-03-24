@@ -14,7 +14,7 @@
         android:layout_marginBottom="16dp"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="16dp"
-        android:text="Escolha a data"
+        android:text="@string/choose_the_date"
         android:textColor="@color/colorPrimary"
         android:textSize="20sp"
         android:textStyle="bold" />
@@ -55,33 +55,6 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:weightSum="3">
-
-            <!--<NumberPicker-->
-            <!--android:id="@+id/pickerDiaNascimento"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_margin="16dp"-->
-            <!--android:layout_marginTop="3dp"-->
-            <!--android:layout_weight="1"-->
-            <!--android:focusable="false" />-->
-
-            <!--<NumberPicker-->
-            <!--android:id="@+id/pickerMesNascimento"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_margin="16dp"-->
-            <!--android:layout_marginTop="3dp"-->
-            <!--android:layout_weight="1"-->
-            <!--android:focusable="false" />-->
-
-            <!--<NumberPicker-->
-            <!--android:id="@+id/pickerAnoNascimento"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_margin="16dp"-->
-            <!--android:layout_marginTop="3dp"-->
-            <!--android:layout_weight="1"-->
-            <!--android:focusable="false" />-->
         </LinearLayout>
     </RelativeLayout>
 
@@ -98,7 +71,7 @@
             android:layout_height="48dp"
             android:layout_margin="2dp"
             android:background="@null"
-            android:text="Cancelar"
+            android:text="@string/cancel"
             android:textColor="@android:color/darker_gray" />
 
         <Button
@@ -107,7 +80,7 @@
             android:layout_height="48dp"
             android:layout_margin="2dp"
             android:background="@null"
-            android:text="Ok"
+            android:text="@string/ok"
             android:textColor="@android:color/holo_green_dark" />
     </LinearLayout>
 </RelativeLayout>
