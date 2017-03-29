@@ -1,8 +1,26 @@
 # Memoro
 
-Projeto inicialmente idealizado e desenvolvido pelos alunos do curso de Sistemas de Informação da Universidade Federal de Goiás.
+O aplicativo tem como objetivo servir de auxílio para compromissos e horários não só acadêmicos, mas do cotidiano como um todo.
 
-Realizado na matéria de Gerência de Projetos 2, este aplicativo tem como objetivo servir de auxílio para compromissos e horários não só acadêmicos, mas do cotidiano como um todo.
-Um dos objetivos deste sistema era ele um projeto aberto para que qualquer programador possa se sentir a vontade de conhecer seu código e melhorá-lo.
+## Motivation
 
-Um projeto Android Studio que trabalha com sdk 14 acima.
+(em breve)
+
+## Installation
+
+min Sdk Version 14
+
+# License
+    Copyright (C) 2017 André Dantas
+    
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
