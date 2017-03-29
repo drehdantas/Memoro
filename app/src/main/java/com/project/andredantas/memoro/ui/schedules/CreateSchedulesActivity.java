@@ -34,7 +34,8 @@ import io.realm.Realm;
 public class CreateSchedulesActivity extends AppCompatActivity {
     private String day, time;
     private Schedule schedule;
-    private static int selectedHour, selectedMinute;
+    private TimePickerDialog mTimePicker;
+    private int selectedHour, selectedMinute;
     private Realm realm = Realm.getDefaultInstance();
 
     @Bind(R.id.schedule_toolbar)
@@ -68,8 +69,7 @@ public class CreateSchedulesActivity extends AppCompatActivity {
                 day = extras.getString("day");
             }
             if (extras.getLong("schedule") != 0) {
-                long horarioId = extras.getLong("schedule");
-                schedule = ScheduleDAO.getById(horarioId);
+                schedule = ScheduleDAO.getById(extras.getLong("schedule"));
             }
         }
     }
@@ -84,6 +84,8 @@ public class CreateSchedulesActivity extends AppCompatActivity {
         }
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         dayWeek.setText(day);
+
+        //edit schedule
         if (schedule != null) {
             textTime.setText(schedule.getTime());
             scheduleTitle.setText(schedule.getTitle());
@@ -92,6 +94,7 @@ public class CreateSchedulesActivity extends AppCompatActivity {
             setTextWithCursorFinal(scheduleTitle);
             setTextWithCursorFinal(scheduleDescript);
         } else {
+            //create schedule
             deleteSchedule.setVisibility(View.GONE);
             selectedHour = new Time(System.currentTimeMillis()).getHours();
             selectedMinute = new Time(System.currentTimeMillis()).getMinutes();
@@ -108,12 +111,11 @@ public class CreateSchedulesActivity extends AppCompatActivity {
                 Calendar mcurrentTime = Calendar.getInstance();
                 int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
                 int minute = mcurrentTime.get(Calendar.MINUTE);
-                TimePickerDialog mTimePicker;
                 mTimePicker = new TimePickerDialog(CreateSchedulesActivity.this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                        CreateSchedulesActivity.selectedHour = selectedHour;
-                        CreateSchedulesActivity.selectedMinute = selectedMinute;
+                        setSelectedHour(selectedHour);
+                        setSelectedMinute(selectedMinute);
                         time = String.format("%02d:%02d", selectedHour, selectedMinute);
                         textTime.setText(time);
                     }
@@ -123,6 +125,15 @@ public class CreateSchedulesActivity extends AppCompatActivity {
 
             }
         });
+
+    }
+
+    public void setSelectedHour(int selectedHour){
+        this.selectedHour = selectedHour;
+    }
+
+    public void setSelectedMinute(int selectedMinute){
+        this.selectedMinute = selectedMinute;
     }
 
     @Override
@@ -144,14 +155,13 @@ public class CreateSchedulesActivity extends AppCompatActivity {
                 } else {
                     if (schedule != null) {
                         //edit schedule
-                        schedule = ScheduleNormal.copyFromNormal(setSchedule(new ScheduleNormal(), false));
-                        ScheduleDAO.updateSchedule(realm, schedule);
+                        ScheduleDAO.updateSchedule(realm, schedule.getId(), scheduleTitle.getText().toString(), scheduleDescript.getText().toString(), selectedHour, selectedMinute, time);
                         finish();
                         Toast.makeText(this, getString(R.string.schedule_update_message), Toast.LENGTH_LONG).show();
                     } else {
                         //create schedule
                         schedule = new Schedule();
-                        schedule = ScheduleNormal.copyFromNormal(setSchedule(new ScheduleNormal(), true));
+                        schedule = ScheduleNormal.copyFromNormal(setSchedule(new ScheduleNormal()));
 
                         ScheduleDAO.saveSchedule(realm, schedule);
                         finish();
@@ -165,15 +175,14 @@ public class CreateSchedulesActivity extends AppCompatActivity {
     }
 
     @OnClick(R.id.delete_schedule)
-    public void deleteSchedule(){
+    public void deleteSchedule() {
         ScheduleDAO.deleteSchedule(realm, schedule);
         finish();
         Toast.makeText(this, getString(R.string.schedule_deleted_message), Toast.LENGTH_LONG).show();
     }
 
-    public ScheduleNormal setSchedule(ScheduleNormal schedule, boolean create) {
-        if (create)
-            schedule.setId(System.currentTimeMillis());
+    public ScheduleNormal setSchedule(ScheduleNormal schedule) {
+        schedule.setId(System.currentTimeMillis());
 
         schedule.setTitle(scheduleTitle.getText().toString());
         schedule.setDescript(scheduleDescript.getText().toString());

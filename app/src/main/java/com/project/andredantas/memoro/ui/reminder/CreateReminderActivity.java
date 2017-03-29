@@ -29,11 +29,13 @@ import com.gun0912.tedpermission.TedPermission;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.project.andredantas.memoro.R;
 import com.project.andredantas.memoro.model.Reminder;
+import com.project.andredantas.memoro.model.ReminderNormal;
 import com.project.andredantas.memoro.model.Schedule;
 import com.project.andredantas.memoro.model.dao.ScheduleDAO;
 import com.project.andredantas.memoro.model.dao.ReminderDAO;
 import com.project.andredantas.memoro.ui.schedules.CreateSchedulesActivity;
 import com.project.andredantas.memoro.utils.Constants;
+import com.project.andredantas.memoro.utils.Utils;
 import com.project.andredantas.memoro.utils.audio.AudioRecordLayout;
 import com.soundcloud.android.crop.Crop;
 import com.squareup.picasso.Picasso;
@@ -58,11 +60,10 @@ import io.realm.Realm;
 public class CreateReminderActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
     private static int REQUEST_PICTURE = 1;
     private static int CAMERA_REQUEST_IMAGE_CAPTURE = 2;
-    private static int selectedHour, selectedMinute;
 
     Calendar myCalendar = Calendar.getInstance();
     private String type, time;
-    private int day, month;
+    private int day = 99, month = 99, selectedHour = 99, selectedMinute = 99;
     private Reminder reminder;
     private List<Schedule> listSchedules;
     private Schedule scheduleChosen;
@@ -162,8 +163,8 @@ public class CreateReminderActivity extends AppCompatActivity implements DatePic
                 mTimePicker = new TimePickerDialog(CreateReminderActivity.this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                        CreateReminderActivity.selectedHour = selectedHour;
-                        CreateReminderActivity.selectedMinute = selectedMinute;
+                        setSelectedHour(selectedHour);
+                        setSelectedMinute(selectedMinute);
                         time = String.format("%02d:%02d", selectedHour, selectedMinute);
                         textTime.setText(time);
                     }
@@ -174,9 +175,11 @@ public class CreateReminderActivity extends AppCompatActivity implements DatePic
             }
         });
 
+        //edit reminder
         if (reminder != null) {
             textTime.setText(reminder.getTime());
             reminderTitle.setText(reminder.getTitle());
+            dataTime.setText(Utils.setDataTime(reminder.getDayAlarm(), reminder.getMonthAlarm()));
             reminderDescript.setText(reminder.getDescript());
             for (int i = 0; i < listSheduleTitles.size(); i++) {
                 if (reminder.getScheduleRelated() == listSchedules.get(i).getId()) {
@@ -197,6 +200,7 @@ public class CreateReminderActivity extends AppCompatActivity implements DatePic
             CreateSchedulesActivity.setTextWithCursorFinal(reminderTitle);
             CreateSchedulesActivity.setTextWithCursorFinal(reminderDescript);
         } else {
+            //create reminder
             deleteReminder.setVisibility(View.GONE);
             selectedHour = new Time(System.currentTimeMillis()).getHours();
             selectedMinute = new Time(System.currentTimeMillis()).getMinutes();
@@ -205,12 +209,20 @@ public class CreateReminderActivity extends AppCompatActivity implements DatePic
 
             day = myCalendar.get(Calendar.DAY_OF_MONTH);
             month = myCalendar.get(Calendar.MONTH) + 1;
-            setDataTime(day, month);
+            dataTime.setText(Utils.setDataTime(day, month));
         }
 
         audioRecordLayout.prepareForPlay(reminder != null);
 
 
+    }
+
+    public void setSelectedHour(int selectedHour){
+        this.selectedHour = selectedHour;
+    }
+
+    public void setSelectedMinute(int selectedMinute){
+        this.selectedMinute = selectedMinute;
     }
 
     @OnClick(R.id.delete_reminder)
@@ -294,7 +306,7 @@ public class CreateReminderActivity extends AppCompatActivity implements DatePic
                 notDeleteFile = false;
 
                 if (reminderTitle.getText().toString().equals("") || reminderTitle.getText() == null) {
-                    Snackbar.make(this.findViewById(android.R.id.content), "Reminder need a title", Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(this.findViewById(android.R.id.content), getString(R.string.reminder_need_title), Snackbar.LENGTH_SHORT).show();
                 } else {
                     if (type.equals("voice")) {
                         if (!audioRecordLayout.isStopped()) {
@@ -315,44 +327,55 @@ public class CreateReminderActivity extends AppCompatActivity implements DatePic
     public void editOrSave() {
         if (reminder != null) {
             //edit reminder
-            reminder = setDataReminder(reminder);
-            ReminderDAO.updateReminder(realm, reminder);
+            ReminderDAO.updateReminder(realm, reminder.getId(), reminderTitle.getText().toString(), reminderDescript.getText().toString(), scheduleChosen, selectedHour, selectedMinute, day, month, audioRecordLayout, fileImage, type);
             finish();
             Toast.makeText(this, getString(R.string.reminder_update_message), Toast.LENGTH_LONG).show();
         } else {
             //create a reminder
             reminder = new Reminder();
-            reminder = setDataReminder(reminder);
+            reminder = ReminderNormal.copyFromNormal(setDataReminder(new ReminderNormal()));
+
             ReminderDAO.saveReminder(realm, reminder);
             finish();
             Toast.makeText(this, getString(R.string.reminder_create_message), Toast.LENGTH_LONG).show();
         }
     }
 
-    public Reminder setDataReminder(Reminder reminder) {
-        realm.beginTransaction();
-        reminder.setTitle(reminderTitle.getText().toString());
-        reminder.setDescript(reminderDescript.getText().toString());
-        reminder.setScheduleRelated(scheduleChosen != null ? scheduleChosen.getId() : 1);
+    public ReminderNormal setDataReminder(ReminderNormal reminderNormal) {
+        reminderNormal.setId(System.currentTimeMillis());
 
-        reminder.setHour(selectedHour);
-        reminder.setMinutes(selectedMinute);
-        reminder.setTime(String.format("%02d:%02d", selectedHour, selectedMinute));
-        reminder.setDayAlarm(day);
-        reminder.setMonthAlarm(month);
+        reminderNormal.setTitle(reminderTitle.getText().toString());
+        reminderNormal.setDescript(reminderDescript.getText().toString());
+        reminderNormal.setScheduleRelated(scheduleChosen != null ? scheduleChosen.getId() : 1);
+
+        if (selectedHour != 99){
+            reminderNormal.setHour(selectedHour);
+            reminderNormal.setTime(String.format("%02d:%02d", selectedHour, selectedMinute));
+        }
+
+        if (selectedMinute != 99){
+            reminderNormal.setMinutes(selectedMinute);
+            reminderNormal.setTime(String.format("%02d:%02d", selectedHour, selectedMinute));
+        }
+
+        if (day != 99){
+            reminderNormal.setDayAlarm(day);
+        }
+
+        if (month != 99){
+            reminderNormal.setMonthAlarm(month);
+        }
 
         if (audioRecordLayout.isStopped()) {
-            reminder.setAudio(audioRecordLayout.getFilePath());
+            reminderNormal.setAudio(audioRecordLayout.getFilePath());
         }
         if (fileImage != null) {
-            reminder.setImage(fileImage);
+            reminderNormal.setImage(fileImage);
         }
 
-        reminder.setType(type);
-        reminder.setId(System.currentTimeMillis());
-        realm.commitTransaction();
+        reminderNormal.setType(type);
 
-        return reminder;
+        return reminderNormal;
     }
 
     @Override
@@ -360,7 +383,8 @@ public class CreateReminderActivity extends AppCompatActivity implements DatePic
         File croppedImageFile = new File(getFilesDir(), "tmp.jpg");
         if ((requestCode == REQUEST_PICTURE) && (resultCode == RESULT_OK)) {
             Uri croppedImage = Uri.fromFile(croppedImageFile);
-            new Crop(data.getData()).withAspect(300, 300).output(croppedImage).start(this);
+            Uri destination = Uri.fromFile(new File(getCacheDir(), "cropped"));
+            Crop.of(croppedImage, destination).asSquare().start(this);
         } else if ((requestCode == CAMERA_REQUEST_IMAGE_CAPTURE) && (resultCode == RESULT_OK)) {
             mImage = (Bitmap) data.getExtras().get("data");
             bitMapImage();
@@ -388,7 +412,7 @@ public class CreateReminderActivity extends AppCompatActivity implements DatePic
                 file.mkdir();
             }
 
-            mImage.compress(Bitmap.CompressFormat.JPEG, 85, bytes);
+            mImage.compress(Bitmap.CompressFormat.PNG, 100, bytes);
             file = new File(file.getAbsolutePath(), new SimpleDateFormat("yyyyMMdd_HHmmss")
                     .format(new Date()) + Constants.IMG_EXT);
             FileOutputStream fo = new FileOutputStream(file);
@@ -407,24 +431,12 @@ public class CreateReminderActivity extends AppCompatActivity implements DatePic
                 .into(reminderImage);
     }
 
-    public void setDataTime(int day, int month){
-        String dayText = String.valueOf(day);
-        if (day < 10) {
-            dayText = '0' + String.valueOf(day);
-        }
 
-        String monthText = String.valueOf(month);
-        if (month < 10) {
-            monthText = '0' + String.valueOf((month));
-        }
-
-        dataTime.setText(dayText + "/" + monthText);
-    }
 
     @Override
     public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
         day = dayOfMonth;
         month =  monthOfYear + 1;
-        setDataTime(dayOfMonth, monthOfYear + 1);
+        dataTime.setText(Utils.setDataTime(dayOfMonth, monthOfYear + 1));
     }
 }

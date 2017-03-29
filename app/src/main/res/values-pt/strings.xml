@@ -22,6 +22,7 @@
     <string name="reminder_create_message">Lembrete criado com sucesso</string>
     <string name="none">Nenhum</string>
     <string name="schedule_need_title">Horário precissa de um título</string>
+    <string name="reminder_need_title">Lembrete precisa de um título</string>
     <string name="schedule_update_message">Horário alterado com sucesso</string>
     <string name="schedule_create_message">Horário criado com sucesso</string>
     <string name="schedule_deleted_message">Horário apagado com sucesso</string>

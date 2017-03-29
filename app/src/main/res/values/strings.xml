@@ -22,6 +22,7 @@
     <string name="reminder_create_message">Reminder created successfully</string>
     <string name="none">None</string>
     <string name="schedule_need_title">Schedule need a title</string>
+    <string name="reminder_need_title">Reminder need a title</string>
     <string name="schedule_update_message">Schedule updated successfully</string>
     <string name="schedule_create_message">Schedule created successfully</string>
     <string name="schedule_deleted_message">Schedule deleted successfully</string>

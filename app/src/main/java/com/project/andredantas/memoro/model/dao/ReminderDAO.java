@@ -1,6 +1,8 @@
 package com.project.andredantas.memoro.model.dao;
 
 import com.project.andredantas.memoro.model.Reminder;
+import com.project.andredantas.memoro.model.Schedule;
+import com.project.andredantas.memoro.utils.audio.AudioRecordLayout;
 
 import java.util.Collections;
 import java.util.List;
@@ -20,9 +22,39 @@ public class ReminderDAO {
         realm.close();
     }
 
-    public static void updateReminder(Realm realm, Reminder reminder) {
+    public static void updateReminder(Realm realm, long id, String title, String descript, Schedule scheduleChosen, int selectedHour, int selectedMinute, int day, int month, AudioRecordLayout audioRecordLayout, String fileImage, String type) {
         realm.beginTransaction();
-        realm.copyToRealmOrUpdate(reminder);
+        Reminder reminder = getById(id);
+        reminder.setTitle(title);
+        reminder.setDescript(descript);
+        reminder.setScheduleRelated(scheduleChosen != null ? scheduleChosen.getId() : 1);
+
+        if (selectedHour != 99){
+            reminder.setHour(selectedHour);
+            reminder.setTime(String.format("%02d:%02d", selectedHour, selectedMinute));
+        }
+
+        if (selectedMinute != 99){
+            reminder.setMinutes(selectedMinute);
+            reminder.setTime(String.format("%02d:%02d", selectedHour, selectedMinute));
+        }
+
+        if (day != 99){
+            reminder.setDayAlarm(day);
+        }
+
+        if (month != 99){
+            reminder.setMonthAlarm(month);
+        }
+
+        if (audioRecordLayout.isStopped()) {
+            reminder.setAudio(audioRecordLayout.getFilePath());
+        }
+        if (fileImage != null) {
+            reminder.setImage(fileImage);
+        }
+
+        reminder.setType(type);
         realm.commitTransaction();
         realm.close();
     }
@@ -47,5 +79,4 @@ public class ReminderDAO {
 
         return reminders;
     }
-
 }

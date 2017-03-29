@@ -92,11 +92,11 @@ public class ScheduleNormal {
     }
 
     public static List<ScheduleNormal> convertFromRealm(List<Schedule> listRealm){
-        List<ScheduleNormal> horariosNormais = new ArrayList<>();
+        List<ScheduleNormal> scheduleNormals = new ArrayList<>();
         for (Schedule schedule : listRealm) {
-            horariosNormais.add(ScheduleNormal.copyFromRealm(schedule));
+            scheduleNormals.add(ScheduleNormal.copyFromRealm(schedule));
         }
-        return horariosNormais;
+        return scheduleNormals;
     }
 
     private static ScheduleNormal copyFromRealm(Schedule schedule){

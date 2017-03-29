@@ -22,9 +22,16 @@ public class ScheduleDAO {
         realm.close();
     }
 
-    public static void updateSchedule(Realm realm, Schedule schedule) {
+    public static void updateSchedule(Realm realm, long id, String title, String descript, int hour, int minutes, String time) {
         realm.beginTransaction();
-        realm.copyToRealmOrUpdate(schedule);
+        Schedule schedule = getById(id);
+        schedule.setTitle(title);
+        schedule.setDescript(descript);
+        if (time != null && !time.equals("")){
+            schedule.setHour(hour);
+            schedule.setMinutes(minutes);
+            schedule.setTime(time);
+        }
         realm.commitTransaction();
         realm.close();
     }

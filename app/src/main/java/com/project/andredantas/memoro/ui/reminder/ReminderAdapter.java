@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.project.andredantas.memoro.R;
 import com.project.andredantas.memoro.model.Reminder;
+import com.project.andredantas.memoro.utils.Utils;
 
 import java.util.Collections;
 import java.util.List;
@@ -47,7 +48,7 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.MyView
     public void onBindViewHolder(MyViewHolder holder, int position) {
         Reminder reminder = reminderList.get(position);
         holder.reminderTitle.setText(reminder.getTitle());
-        holder.reminderDescript.setText(reminder.getTime() + " - " + reminder.getDayAlarm() + "/" + reminder.getMonthAlarm());
+        holder.reminderDescript.setText(reminder.getTime() + " - " + Utils.setDataTime(reminder.getDayAlarm(), reminder.getMonthAlarm()));
         if (reminder.getType().equals("text")){
             holder.reminderImage.setImageDrawable(context.getDrawable(R.drawable.ic_text_format_white_24dp));
         }else if (reminder.getType().equals("image")){
