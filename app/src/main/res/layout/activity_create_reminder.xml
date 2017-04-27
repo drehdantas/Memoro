@@ -184,7 +184,7 @@
                     android:layout_height="300dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
-                    android:visibility="gone" />
+                    android:visibility="gone"/>
 
                 <RelativeLayout
                     android:id="@+id/reminder_image_layout"

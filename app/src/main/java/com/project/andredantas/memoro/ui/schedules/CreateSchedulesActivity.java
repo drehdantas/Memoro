@@ -4,6 +4,8 @@ import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.Selection;
@@ -22,9 +24,15 @@ import com.project.andredantas.memoro.R;
 import com.project.andredantas.memoro.model.Schedule;
 import com.project.andredantas.memoro.model.ScheduleNormal;
 import com.project.andredantas.memoro.model.dao.ScheduleDAO;
+import com.project.andredantas.memoro.utils.Utils;
+import com.project.andredantas.memoro.utils.colors.RecyclerViewColorAdapter;
+import com.project.andredantas.memoro.utils.colors.SpacesItemDecoration;
 
 import java.sql.Time;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -37,6 +45,8 @@ public class CreateSchedulesActivity extends AppCompatActivity {
     private TimePickerDialog mTimePicker;
     private int selectedHour, selectedMinute;
     private Realm realm = Realm.getDefaultInstance();
+    private RecyclerViewColorAdapter colorAdapter;
+    private List<Integer> mColors;
 
     @Bind(R.id.schedule_toolbar)
     Toolbar toolbar;
@@ -52,6 +62,9 @@ public class CreateSchedulesActivity extends AppCompatActivity {
     EditText scheduleDescript;
     @Bind(R.id.delete_schedule)
     Button deleteSchedule;
+
+    @Bind(R.id.color_picker_recycler_view)
+    RecyclerView colorRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,6 +139,16 @@ public class CreateSchedulesActivity extends AppCompatActivity {
             }
         });
 
+        mColors = Utils.getColors(this);
+
+        // Color Recycler View
+        colorAdapter = new RecyclerViewColorAdapter(this);
+        colorAdapter.setColors(mColors);
+        LinearLayoutManager colorLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        colorRecyclerView.setLayoutManager(colorLayoutManager);
+        colorRecyclerView.addItemDecoration(new SpacesItemDecoration(this, mColors.size(), 20));
+        colorRecyclerView.setHasFixedSize(true);
+        colorRecyclerView.setAdapter(colorAdapter);
     }
 
     public void setSelectedHour(int selectedHour){

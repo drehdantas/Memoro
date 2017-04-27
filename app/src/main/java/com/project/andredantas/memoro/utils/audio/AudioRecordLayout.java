@@ -73,12 +73,9 @@ public class AudioRecordLayout extends FrameLayout {
                     public void onPermissionGranted() {
                         boolean recording = audioRecorder.isRecording();
                         if (recording) {
-                            audioRecorder.stopRecording();
-                            filePath = audioRecorder.getmFileName();
-                            stopped = true;
+                            setStopped();
                         } else {
-                            audioRecorder.startRecording();
-                            stopped = false;
+                            setStartRecord();
                         }
 
                         updateUI(recording);
@@ -94,6 +91,17 @@ public class AudioRecordLayout extends FrameLayout {
                 .check();
     }
 
+    public void setStopped(){
+        audioRecorder.stopRecording();
+        filePath = audioRecorder.getmFileName();
+        stopped = true;
+    }
+
+    public void setStartRecord(){
+        audioRecorder.startRecording();
+        stopped = false;
+    }
+
     @OnClick(R.id.play_pause_button)
     public void onPlayAudioClick() {
         playPause.setImageResource(R.drawable.ic_av_pause);
@@ -106,20 +114,17 @@ public class AudioRecordLayout extends FrameLayout {
         });
     }
 
-    private void updateUIPlayPause() {
-
-    }
-
     private void updateUI(boolean recording) {
         if (recording) {
             startRecord.setImageResource(R.drawable.ic_play);
-            message.setText("Começar a gravar");
+            message.setText(getContext().getString(R.string.start_recording));
             chronometer.stop();//stop chronometer
             chronometer.setBase(SystemClock.elapsedRealtime());//reset chronometer
         } else {
+            chronometer.setBase(SystemClock.elapsedRealtime());
             startRecord.setImageResource(R.drawable.ic_av_pause);
             chronometer.start();//start chronometer
-            message.setText("Gravando");
+            message.setText(getContext().getString(R.string.recording));
         }
     }
 

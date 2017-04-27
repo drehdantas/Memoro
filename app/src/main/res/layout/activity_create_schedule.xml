@@ -112,6 +112,8 @@
 
         </LinearLayout>
 
+        <include layout="@layout/cardview_colors"/>
+
     </LinearLayout>
 
     <Button

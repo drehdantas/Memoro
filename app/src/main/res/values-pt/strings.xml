@@ -8,8 +8,8 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_criar_lembrete">CriarLembreteActivity</string>
-    <string name="title_activity_criar_horario">CriarHorarioActivity</string>
+    <string name="title_activity_create_reminder">CriarLembreteActivity</string>
+    <string name="title_activity_create_schedule">CriarHorarioActivity</string>
 
     <string name="edit_reminder">Alterar Lembrete</string>
     <string name="create_reminder">Criar Lembrete</string>
@@ -53,5 +53,8 @@
     <string name="ok">Ok</string>
     <string name="start_recording">Começar a gravar</string>
     <string name="time">Hora</string>
+    <string name="menu_title_save">Cortar Imagem</string>
+    <string name="recording">Gravando</string>
+    <string name="color">Cor</string>
 
 </resources>

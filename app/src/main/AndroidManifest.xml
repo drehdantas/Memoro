@@ -2,9 +2,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.project.andredantas.memoro">
 
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
 
     <application
         android:name="com.project.andredantas.memoro.App"
@@ -22,13 +26,14 @@
         </activity>
         <activity
             android:name=".ui.reminder.CreateReminderActivity"
-            android:label="@string/title_activity_criar_lembrete" />
+            android:label="@string/title_activity_create_reminder"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.schedules.CreateSchedulesActivity"
-            android:label="@string/title_activity_criar_horario"/>
-        <activity
-            android:name="com.soundcloud.android.crop.CropImageActivity"
+            android:label="@string/title_activity_create_schedule"
             android:screenOrientation="portrait" />
+        <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
+            android:theme="@style/Base.Theme.AppCompat"/>
     </application>
 
 </manifest>

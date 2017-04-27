@@ -84,6 +84,12 @@ public class AudioRecorder {
         }
     }
 
+    public void stopAudio(){
+        if (mediaPlayer != null){
+            mediaPlayer.stop();
+        }
+    }
+
     public MediaPlayer getMediaPlayer(){
         return mediaPlayer;
     }
@@ -114,6 +120,8 @@ public class AudioRecorder {
         return recording;
     }
 
-
+    public boolean isPlaying(){
+        return playing;
+    }
 
 }

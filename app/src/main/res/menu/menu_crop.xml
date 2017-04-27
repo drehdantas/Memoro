@@ -1,0 +1,10 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="br.com.triangulum.mink.utils.CropActivity">
+    <item
+        android:id="@+id/menu_complete_record_item_jump"
+        android:title="@string/menu_title_save"
+        android:icon="@drawable/ic_check"
+        app:showAsAction="always" />
+</menu>

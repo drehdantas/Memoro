@@ -192,6 +192,7 @@ public class ReminderNormal{
         reminder.setScheduleRelated(reminderNormal.getScheduleRelated());
         reminder.setTitle(reminderNormal.getTitle());
         reminder.setType(reminderNormal.getType());
+        reminder.setImage(reminderNormal.getImage());
 
         realm.commitTransaction();
         return reminder;

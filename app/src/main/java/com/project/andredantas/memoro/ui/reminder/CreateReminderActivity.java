@@ -1,12 +1,14 @@
 package com.project.andredantas.memoro.ui.reminder;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -34,22 +36,20 @@ import com.project.andredantas.memoro.model.Schedule;
 import com.project.andredantas.memoro.model.dao.ScheduleDAO;
 import com.project.andredantas.memoro.model.dao.ReminderDAO;
 import com.project.andredantas.memoro.ui.schedules.CreateSchedulesActivity;
-import com.project.andredantas.memoro.utils.Constants;
 import com.project.andredantas.memoro.utils.Utils;
 import com.project.andredantas.memoro.utils.audio.AudioRecordLayout;
-import com.soundcloud.android.crop.Crop;
 import com.squareup.picasso.Picasso;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
-import java.io.ByteArrayOutputStream;
+import org.greenrobot.eventbus.EventBus;
+
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.Time;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import butterknife.Bind;
@@ -58,10 +58,8 @@ import butterknife.OnClick;
 import io.realm.Realm;
 
 public class CreateReminderActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
-    private static int REQUEST_PICTURE = 1;
-    private static int CAMERA_REQUEST_IMAGE_CAPTURE = 2;
 
-    Calendar myCalendar = Calendar.getInstance();
+    private Calendar myCalendar = Calendar.getInstance();
     private String type, time;
     private int day = 99, month = 99, selectedHour = 99, selectedMinute = 99;
     private Reminder reminder;
@@ -69,8 +67,9 @@ public class CreateReminderActivity extends AppCompatActivity implements DatePic
     private Schedule scheduleChosen;
     private ArrayList<String> listSheduleTitles = new ArrayList<>();
     private Bitmap mImage;
-    private String fileImage;
     private Realm realm = Realm.getDefaultInstance();
+    private Uri mCropImageUri;
+    private String fileImage;
 
     @Bind(R.id.reminder_toolbar)
     Toolbar toolbar;
@@ -120,17 +119,7 @@ public class CreateReminderActivity extends AppCompatActivity implements DatePic
             getSupportActionBar().setTitle(reminder != null ? getString(R.string.edit_reminder) : getString(R.string.create_reminder));
         }
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-
-        if (type.equals("image")) {
-            voiceRecorderLayout.setVisibility(View.GONE);
-            reminderImageLayout.setVisibility(View.VISIBLE);
-        } else if (type.equals("voice")) {
-            voiceRecorderLayout.setVisibility(View.VISIBLE);
-            reminderImageLayout.setVisibility(View.GONE);
-        } else if (type.equals("text")) {
-            voiceRecorderLayout.setVisibility(View.GONE);
-            reminderImageLayout.setVisibility(View.GONE);
-        }
+        configReminderType();
 
         listSchedules = ScheduleDAO.listSchedules();
         if (listSchedules != null) {
@@ -175,53 +164,70 @@ public class CreateReminderActivity extends AppCompatActivity implements DatePic
             }
         });
 
-        //edit reminder
         if (reminder != null) {
-            textTime.setText(reminder.getTime());
-            reminderTitle.setText(reminder.getTitle());
-            dataTime.setText(Utils.setDataTime(reminder.getDayAlarm(), reminder.getMonthAlarm()));
-            reminderDescript.setText(reminder.getDescript());
-            for (int i = 0; i < listSheduleTitles.size(); i++) {
-                if (reminder.getScheduleRelated() == listSchedules.get(i).getId()) {
-                    schedulesSpinner.setSelectedIndex(i);
-                }
-            }
-            audioRecordLayout.setFilePath(reminder.getAudio());
-            if (reminder.getImage() != null) {
-                reminderImage.setVisibility(View.VISIBLE);
-                reminderImageLayout.setVisibility(View.GONE);
-                File filePath = new File(reminder.getImage());
-
-                Picasso.with(this)
-                        .load(filePath)
-                        .into(reminderImage);
-            }
-            deleteReminder.setVisibility(View.VISIBLE);
-            CreateSchedulesActivity.setTextWithCursorFinal(reminderTitle);
-            CreateSchedulesActivity.setTextWithCursorFinal(reminderDescript);
+            configEditReminderView();
         } else {
-            //create reminder
-            deleteReminder.setVisibility(View.GONE);
-            selectedHour = new Time(System.currentTimeMillis()).getHours();
-            selectedMinute = new Time(System.currentTimeMillis()).getMinutes();
-            String curTime = String.format("%02d:%02d", selectedHour, selectedMinute);
-            textTime.setText(curTime);
-
-            day = myCalendar.get(Calendar.DAY_OF_MONTH);
-            month = myCalendar.get(Calendar.MONTH) + 1;
-            dataTime.setText(Utils.setDataTime(day, month));
+            configCreateReminderView();
         }
 
         audioRecordLayout.prepareForPlay(reminder != null);
-
-
     }
 
-    public void setSelectedHour(int selectedHour){
+    public void configCreateReminderView() {
+        deleteReminder.setVisibility(View.GONE);
+        selectedHour = new Time(System.currentTimeMillis()).getHours();
+        selectedMinute = new Time(System.currentTimeMillis()).getMinutes();
+        String curTime = String.format("%02d:%02d", selectedHour, selectedMinute);
+        textTime.setText(curTime);
+
+        day = myCalendar.get(Calendar.DAY_OF_MONTH);
+        month = myCalendar.get(Calendar.MONTH) + 1;
+        dataTime.setText(Utils.setDataTime(day, month));
+    }
+
+    public void configEditReminderView() {
+        textTime.setText(reminder.getTime());
+        reminderTitle.setText(reminder.getTitle());
+        dataTime.setText(Utils.setDataTime(reminder.getDayAlarm(), reminder.getMonthAlarm()));
+        reminderDescript.setText(reminder.getDescript());
+        for (int i = 0; i < listSheduleTitles.size(); i++) {
+            if (reminder.getScheduleRelated() == listSchedules.get(i).getId()) {
+                schedulesSpinner.setSelectedIndex(i);
+            }
+        }
+        audioRecordLayout.setFilePath(reminder.getAudio());
+        if (reminder.getImage() != null) {
+            reminderImage.setVisibility(View.VISIBLE);
+            reminderImageLayout.setVisibility(View.GONE);
+            File filePath = new File(reminder.getImage());
+
+            Picasso.with(this)
+                    .load(filePath)
+                    .into(reminderImage);
+        }
+        deleteReminder.setVisibility(View.VISIBLE);
+        CreateSchedulesActivity.setTextWithCursorFinal(reminderTitle);
+        CreateSchedulesActivity.setTextWithCursorFinal(reminderDescript);
+    }
+
+    public void configReminderType() {
+        if (type.equals("image")) {
+            voiceRecorderLayout.setVisibility(View.GONE);
+            reminderImageLayout.setVisibility(View.VISIBLE);
+        } else if (type.equals("voice")) {
+            voiceRecorderLayout.setVisibility(View.VISIBLE);
+            reminderImageLayout.setVisibility(View.GONE);
+        } else if (type.equals("text")) {
+            voiceRecorderLayout.setVisibility(View.GONE);
+            reminderImageLayout.setVisibility(View.GONE);
+        }
+    }
+
+    public void setSelectedHour(int selectedHour) {
         this.selectedHour = selectedHour;
     }
 
-    public void setSelectedMinute(int selectedMinute){
+    public void setSelectedMinute(int selectedMinute) {
         this.selectedMinute = selectedMinute;
     }
 
@@ -250,10 +256,9 @@ public class CreateReminderActivity extends AppCompatActivity implements DatePic
                 .setPermissionListener(new PermissionListener() {
                     @Override
                     public void onPermissionGranted() {
-                        final Intent intent = new Intent();
-                        intent.setType("image/*");
-                        intent.setAction(Intent.ACTION_GET_CONTENT);
-                        startActivityForResult(Intent.createChooser(intent, "Select picture"), REQUEST_PICTURE);
+                        CropImage.activity(mCropImageUri)
+                                .setGuidelines(CropImageView.Guidelines.ON)
+                                .start(CreateReminderActivity.this);
                     }
 
                     @Override
@@ -262,14 +267,8 @@ public class CreateReminderActivity extends AppCompatActivity implements DatePic
                     }
                 })
                 .setDeniedMessage("If you reject permission,you can not use this service\n\nPlease turn on permissions at [Setting] > [Permission]")
-                .setPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                .setPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE)
                 .check();
-    }
-
-    @OnClick(R.id.click_camera)
-    public void pickClickCamera() {
-        Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(cameraIntent, CAMERA_REQUEST_IMAGE_CAPTURE);
     }
 
 
@@ -280,8 +279,7 @@ public class CreateReminderActivity extends AppCompatActivity implements DatePic
                 type = extras.getString("type");
             }
             if (extras.getLong("reminder") != 0) {
-                long lembreteId = extras.getLong("reminder");
-                reminder = ReminderDAO.getById(lembreteId);
+                reminder = ReminderDAO.getById(extras.getLong("reminder"));
             }
         }
     }
@@ -310,13 +308,13 @@ public class CreateReminderActivity extends AppCompatActivity implements DatePic
                 } else {
                     if (type.equals("voice")) {
                         if (!audioRecordLayout.isStopped()) {
-                            Snackbar.make(this.findViewById(android.R.id.content), "Pause before saving", Snackbar.LENGTH_SHORT).show();
-                        } else {
-                            editOrSave();
+                            audioRecordLayout.setStopped();
                         }
-                    } else {
-                        editOrSave();
+                    } else if (type.equals("image")) {
+                        fileImage = Utils.createDirectoryAndSaveFile(mImage);
                     }
+
+                    editOrSave();
                 }
                 return true;
         }
@@ -348,21 +346,21 @@ public class CreateReminderActivity extends AppCompatActivity implements DatePic
         reminderNormal.setDescript(reminderDescript.getText().toString());
         reminderNormal.setScheduleRelated(scheduleChosen != null ? scheduleChosen.getId() : 1);
 
-        if (selectedHour != 99){
+        if (selectedHour != 99) {
             reminderNormal.setHour(selectedHour);
             reminderNormal.setTime(String.format("%02d:%02d", selectedHour, selectedMinute));
         }
 
-        if (selectedMinute != 99){
+        if (selectedMinute != 99) {
             reminderNormal.setMinutes(selectedMinute);
             reminderNormal.setTime(String.format("%02d:%02d", selectedHour, selectedMinute));
         }
 
-        if (day != 99){
+        if (day != 99) {
             reminderNormal.setDayAlarm(day);
         }
 
-        if (month != 99){
+        if (month != 99) {
             reminderNormal.setMonthAlarm(month);
         }
 
@@ -379,64 +377,38 @@ public class CreateReminderActivity extends AppCompatActivity implements DatePic
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, final Intent data) {
-        File croppedImageFile = new File(getFilesDir(), "tmp.jpg");
-        if ((requestCode == REQUEST_PICTURE) && (resultCode == RESULT_OK)) {
-            Uri croppedImage = Uri.fromFile(croppedImageFile);
-            Uri destination = Uri.fromFile(new File(getCacheDir(), "cropped"));
-            Crop.of(croppedImage, destination).asSquare().start(this);
-        } else if ((requestCode == CAMERA_REQUEST_IMAGE_CAPTURE) && (resultCode == RESULT_OK)) {
-            mImage = (Bitmap) data.getExtras().get("data");
-            bitMapImage();
-        } else if (requestCode == Crop.REQUEST_CROP && resultCode == RESULT_OK) {
-            try {
-                mImage = MediaStore.Images.Media.getBitmap(this.getContentResolver(), Uri.fromFile(croppedImageFile));
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                mImage.compress(Bitmap.CompressFormat.PNG, 100, stream);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            bitMapImage();
+    protected void onDestroy() {
+        super.onDestroy();
+        if (audioRecordLayout != null && audioRecordLayout.getAudioRecorder().isPlaying()){
+            audioRecordLayout.getAudioRecorder().stopAudio();
         }
     }
 
-    public void bitMapImage() {
-        File file = null;
-
-        try {
-            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-            file = new File(Environment.getExternalStorageDirectory() + "/memoro/image");
-
-            if (!file.exists()) {
-                file.mkdir();
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == RESULT_OK) {
+                Uri uriImage = result.getUri();
+                reminderImage.setVisibility(View.VISIBLE);
+                reminderImageLayout.setVisibility(View.GONE);
+                reminderImage.setImageURI(uriImage);
+                try {
+                    mImage = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uriImage);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Exception error = result.getError();
+                Toast.makeText(this, error.getMessage(), Toast.LENGTH_LONG).show();
             }
-
-            mImage.compress(Bitmap.CompressFormat.PNG, 100, bytes);
-            file = new File(file.getAbsolutePath(), new SimpleDateFormat("yyyyMMdd_HHmmss")
-                    .format(new Date()) + Constants.IMG_EXT);
-            FileOutputStream fo = new FileOutputStream(file);
-            fo.write(bytes.toByteArray());
-            fo.flush();
-            fo.close();
-
-            fileImage = file.toString();
-        } catch (Exception e) {
-            e.printStackTrace();
         }
-        reminderImage.setVisibility(View.VISIBLE);
-        reminderImageLayout.setVisibility(View.GONE);
-        Picasso.with(this)
-                .load(file)
-                .into(reminderImage);
     }
-
-
 
     @Override
     public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
         day = dayOfMonth;
-        month =  monthOfYear + 1;
+        month = monthOfYear + 1;
         dataTime.setText(Utils.setDataTime(dayOfMonth, monthOfYear + 1));
     }
 }
