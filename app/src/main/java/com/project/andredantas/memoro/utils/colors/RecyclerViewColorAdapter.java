@@ -10,6 +10,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
 import com.project.andredantas.memoro.R;
+import com.project.andredantas.memoro.model.ColorRealm;
 
 import java.util.List;
 
@@ -22,11 +23,13 @@ public class RecyclerViewColorAdapter extends RecyclerView.Adapter {
 
     private Context context;
     private LayoutInflater layoutInflater;
-    private List<Integer> colors;
+    private List<ColorRealm> colorRealms;
     private int selectedPos = 0;
+    private OnColorClickListener listener;
 
-    public RecyclerViewColorAdapter(Context context) {
+    public RecyclerViewColorAdapter(Context context, OnColorClickListener listener) {
         this.context = context;
+        this.listener = listener;
         this.layoutInflater = LayoutInflater.from(context);
     }
 
@@ -34,8 +37,8 @@ public class RecyclerViewColorAdapter extends RecyclerView.Adapter {
         return selectedPos;
     }
 
-    public void setColors(List<Integer> colors) {
-        this.colors = colors;
+    public void setColorRealms(List<ColorRealm> colorRealms) {
+        this.colorRealms = colorRealms;
     }
 
     @Override
@@ -57,7 +60,7 @@ public class RecyclerViewColorAdapter extends RecyclerView.Adapter {
             drawable.setStroke(1, context.getResources().getColor(R.color.darker_gray));
 
             ColorHolder colorHolder = (ColorHolder) holder;
-            drawable.setColor(colors.get(position - NO_COLOR));
+            drawable.setColor((int) colorRealms.get(position - NO_COLOR).getColorNumber());
             colorHolder.imageView.setBackground(drawable);
             colorHolder.itemView.setSelected(selectedPos == position);
         }
@@ -65,7 +68,7 @@ public class RecyclerViewColorAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemCount() {
-        return colors == null ? 0 : colors.size() + NO_COLOR;
+        return colorRealms == null ? 0 : colorRealms.size() + NO_COLOR;
     }
 
     @Override
@@ -91,7 +94,7 @@ public class RecyclerViewColorAdapter extends RecyclerView.Adapter {
                     if(position != RecyclerView.NO_POSITION){
                         selectedPos = position;
                         notifyItemChanged(selectedPos);
-//                        ((ProductDetailActivity)context).setProductColor(colors.get(selectedPos));
+                        listener.onColorClick(colorRealms.get(selectedPos - NO_COLOR));
                     }
 
                 }
@@ -118,13 +121,17 @@ public class RecyclerViewColorAdapter extends RecyclerView.Adapter {
                     if(position != RecyclerView.NO_POSITION){
                         selectedPos = position;
                         notifyItemChanged(selectedPos);
-//                        ((ProductDetailActivity)context).setProductColor(colors.get(selectedPos));
+                        listener.onColorClick(null);
                     }
 
                 }
             });
 
         }
+    }
+
+    public interface OnColorClickListener {
+        void onColorClick(ColorRealm colorRealm);
     }
 
 }

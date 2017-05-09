@@ -1,13 +1,10 @@
 package com.project.andredantas.memoro.ui.reminder;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.TimePickerDialog;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
@@ -30,9 +27,9 @@ import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.project.andredantas.memoro.R;
+import com.project.andredantas.memoro.model.ReminderRealm;
 import com.project.andredantas.memoro.model.Reminder;
-import com.project.andredantas.memoro.model.ReminderNormal;
-import com.project.andredantas.memoro.model.Schedule;
+import com.project.andredantas.memoro.model.ScheduleRealm;
 import com.project.andredantas.memoro.model.dao.ScheduleDAO;
 import com.project.andredantas.memoro.model.dao.ReminderDAO;
 import com.project.andredantas.memoro.ui.schedules.CreateSchedulesActivity;
@@ -42,8 +39,6 @@ import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
-
-import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
 import java.io.IOException;
@@ -62,9 +57,9 @@ public class CreateReminderActivity extends AppCompatActivity implements DatePic
     private Calendar myCalendar = Calendar.getInstance();
     private String type, time;
     private int day = 99, month = 99, selectedHour = 99, selectedMinute = 99;
-    private Reminder reminder;
-    private List<Schedule> listSchedules;
-    private Schedule scheduleChosen;
+    private ReminderRealm reminderRealm;
+    private List<ScheduleRealm> listScheduleRealms;
+    private ScheduleRealm scheduleRealmChosen;
     private ArrayList<String> listSheduleTitles = new ArrayList<>();
     private Bitmap mImage;
     private Realm realm = Realm.getDefaultInstance();
@@ -116,15 +111,15 @@ public class CreateReminderActivity extends AppCompatActivity implements DatePic
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
-            getSupportActionBar().setTitle(reminder != null ? getString(R.string.edit_reminder) : getString(R.string.create_reminder));
+            getSupportActionBar().setTitle(reminderRealm != null ? getString(R.string.edit_reminder) : getString(R.string.create_reminder));
         }
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         configReminderType();
 
-        listSchedules = ScheduleDAO.listSchedules();
-        if (listSchedules != null) {
-            for (int i = 0; i < listSchedules.size(); i++) {
-                listSheduleTitles.add(listSchedules.get(i).getTitle());
+        listScheduleRealms = ScheduleDAO.listSchedules();
+        if (listScheduleRealms != null) {
+            for (int i = 0; i < listScheduleRealms.size(); i++) {
+                listSheduleTitles.add(listScheduleRealms.get(i).getTitle());
             }
         }
 
@@ -134,7 +129,7 @@ public class CreateReminderActivity extends AppCompatActivity implements DatePic
             public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
                 for (int i = 0; i < listSheduleTitles.size(); i++) {
                     if (listSheduleTitles.get(i).equals(item)) {
-                        scheduleChosen = listSchedules.get(i);
+                        scheduleRealmChosen = listScheduleRealms.get(i);
                     }
                 }
             }
@@ -164,13 +159,13 @@ public class CreateReminderActivity extends AppCompatActivity implements DatePic
             }
         });
 
-        if (reminder != null) {
+        if (reminderRealm != null) {
             configEditReminderView();
         } else {
             configCreateReminderView();
         }
 
-        audioRecordLayout.prepareForPlay(reminder != null);
+        audioRecordLayout.prepareForPlay(reminderRealm != null);
     }
 
     public void configCreateReminderView() {
@@ -186,20 +181,20 @@ public class CreateReminderActivity extends AppCompatActivity implements DatePic
     }
 
     public void configEditReminderView() {
-        textTime.setText(reminder.getTime());
-        reminderTitle.setText(reminder.getTitle());
-        dataTime.setText(Utils.setDataTime(reminder.getDayAlarm(), reminder.getMonthAlarm()));
-        reminderDescript.setText(reminder.getDescript());
+        textTime.setText(reminderRealm.getTime());
+        reminderTitle.setText(reminderRealm.getTitle());
+        dataTime.setText(Utils.setDataTime(reminderRealm.getDayAlarm(), reminderRealm.getMonthAlarm()));
+        reminderDescript.setText(reminderRealm.getDescript());
         for (int i = 0; i < listSheduleTitles.size(); i++) {
-            if (reminder.getScheduleRelated() == listSchedules.get(i).getId()) {
+            if (reminderRealm.getScheduleRelated() == listScheduleRealms.get(i).getId()) {
                 schedulesSpinner.setSelectedIndex(i);
             }
         }
-        audioRecordLayout.setFilePath(reminder.getAudio());
-        if (reminder.getImage() != null) {
+        audioRecordLayout.setFilePath(reminderRealm.getAudio());
+        if (reminderRealm.getImage() != null) {
             reminderImage.setVisibility(View.VISIBLE);
             reminderImageLayout.setVisibility(View.GONE);
-            File filePath = new File(reminder.getImage());
+            File filePath = new File(reminderRealm.getImage());
 
             Picasso.with(this)
                     .load(filePath)
@@ -233,7 +228,7 @@ public class CreateReminderActivity extends AppCompatActivity implements DatePic
 
     @OnClick(R.id.delete_reminder)
     public void deleteReminder() {
-        ReminderDAO.deleteReminder(realm, reminder);
+        ReminderDAO.deleteReminder(realm, reminderRealm);
         finish();
         Toast.makeText(this, getString(R.string.reminder_deleted_message), Toast.LENGTH_LONG).show();
     }
@@ -278,8 +273,8 @@ public class CreateReminderActivity extends AppCompatActivity implements DatePic
             if (extras.getString("type") != null) {
                 type = extras.getString("type");
             }
-            if (extras.getLong("reminder") != 0) {
-                reminder = ReminderDAO.getById(extras.getLong("reminder"));
+            if (extras.getLong("reminderRealm") != 0) {
+                reminderRealm = ReminderDAO.getById(extras.getLong("reminderRealm"));
             }
         }
     }
@@ -323,57 +318,57 @@ public class CreateReminderActivity extends AppCompatActivity implements DatePic
     }
 
     public void editOrSave() {
-        if (reminder != null) {
-            //edit reminder
-            ReminderDAO.updateReminder(realm, reminder.getId(), reminderTitle.getText().toString(), reminderDescript.getText().toString(), scheduleChosen, selectedHour, selectedMinute, day, month, audioRecordLayout, fileImage, type);
+        if (reminderRealm != null) {
+            //edit reminderRealm
+            ReminderDAO.updateReminder(realm, reminderRealm.getId(), reminderTitle.getText().toString(), reminderDescript.getText().toString(), scheduleRealmChosen, selectedHour, selectedMinute, day, month, audioRecordLayout, fileImage, type);
             finish();
             Toast.makeText(this, getString(R.string.reminder_update_message), Toast.LENGTH_LONG).show();
         } else {
-            //create a reminder
-            reminder = new Reminder();
-            reminder = ReminderNormal.copyFromNormal(setDataReminder(new ReminderNormal()));
+            //create a reminderRealm
+            reminderRealm = new ReminderRealm();
+            reminderRealm = Reminder.copyFromNormal(setDataReminder(new Reminder()));
 
-            ReminderDAO.saveReminder(realm, reminder);
+            ReminderDAO.saveReminder(realm, reminderRealm);
             finish();
             Toast.makeText(this, getString(R.string.reminder_create_message), Toast.LENGTH_LONG).show();
         }
     }
 
-    public ReminderNormal setDataReminder(ReminderNormal reminderNormal) {
-        reminderNormal.setId(System.currentTimeMillis());
+    public Reminder setDataReminder(Reminder reminder) {
+        reminder.setId(System.currentTimeMillis());
 
-        reminderNormal.setTitle(reminderTitle.getText().toString());
-        reminderNormal.setDescript(reminderDescript.getText().toString());
-        reminderNormal.setScheduleRelated(scheduleChosen != null ? scheduleChosen.getId() : 1);
+        reminder.setTitle(reminderTitle.getText().toString());
+        reminder.setDescript(reminderDescript.getText().toString());
+        reminder.setScheduleRelated(scheduleRealmChosen != null ? scheduleRealmChosen.getId() : 1);
 
         if (selectedHour != 99) {
-            reminderNormal.setHour(selectedHour);
-            reminderNormal.setTime(String.format("%02d:%02d", selectedHour, selectedMinute));
+            reminder.setHour(selectedHour);
+            reminder.setTime(String.format("%02d:%02d", selectedHour, selectedMinute));
         }
 
         if (selectedMinute != 99) {
-            reminderNormal.setMinutes(selectedMinute);
-            reminderNormal.setTime(String.format("%02d:%02d", selectedHour, selectedMinute));
+            reminder.setMinutes(selectedMinute);
+            reminder.setTime(String.format("%02d:%02d", selectedHour, selectedMinute));
         }
 
         if (day != 99) {
-            reminderNormal.setDayAlarm(day);
+            reminder.setDayAlarm(day);
         }
 
         if (month != 99) {
-            reminderNormal.setMonthAlarm(month);
+            reminder.setMonthAlarm(month);
         }
 
         if (audioRecordLayout.isStopped()) {
-            reminderNormal.setAudio(audioRecordLayout.getFilePath());
+            reminder.setAudio(audioRecordLayout.getFilePath());
         }
         if (fileImage != null) {
-            reminderNormal.setImage(fileImage);
+            reminder.setImage(fileImage);
         }
 
-        reminderNormal.setType(type);
+        reminder.setType(type);
 
-        return reminderNormal;
+        return reminder;
     }
 
     @Override

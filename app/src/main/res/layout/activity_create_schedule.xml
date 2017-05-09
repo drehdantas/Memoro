@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.project.andredantas.memoro.ui.schedules.CreateSchedulesActivity">
+    android:layout_height="match_parent">
 
     <RelativeLayout
         android:id="@+id/my_toolbar_component"
@@ -49,7 +48,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="4dp"
                 android:layout_marginStart="4dp"
-                android:text="Teste feira"
                 android:textColor="@android:color/background_dark"
                 android:textSize="18sp" />
         </LinearLayout>

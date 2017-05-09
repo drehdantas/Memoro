@@ -1,15 +1,19 @@
 package com.project.andredantas.memoro.ui.reminder;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.project.andredantas.memoro.R;
-import com.project.andredantas.memoro.model.Reminder;
+import com.project.andredantas.memoro.model.ReminderRealm;
+import com.project.andredantas.memoro.model.ScheduleRealm;
+import com.project.andredantas.memoro.model.dao.ScheduleDAO;
 import com.project.andredantas.memoro.utils.Utils;
 
 import java.util.Collections;
@@ -26,15 +30,15 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.MyView
     private Context context;
     private LayoutInflater layoutInflater;
     private OnReminderClickListener listener;
-    private List<Reminder> reminderList = Collections.EMPTY_LIST;
+    private List<ReminderRealm> reminderRealmList = Collections.EMPTY_LIST;
 
-    public ReminderAdapter(Context context, List<Reminder> reminderList, OnReminderClickListener listener) {
+    public ReminderAdapter(Context context, List<ReminderRealm> reminderRealmList, OnReminderClickListener listener) {
         if(context == null)
             return;
 
         this.listener = listener;
         this.context = context;
-        this.reminderList = reminderList;
+        this.reminderRealmList = reminderRealmList;
         this.layoutInflater = LayoutInflater.from(context);
     }
 
@@ -46,21 +50,27 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.MyView
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        Reminder reminder = reminderList.get(position);
-        holder.reminderTitle.setText(reminder.getTitle());
-        holder.reminderDescript.setText(reminder.getTime() + " - " + Utils.setDataTime(reminder.getDayAlarm(), reminder.getMonthAlarm()));
-        if (reminder.getType().equals("text")){
+        ReminderRealm reminderRealm = reminderRealmList.get(position);
+        holder.reminderTitle.setText(reminderRealm.getTitle());
+        holder.reminderDescript.setText(reminderRealm.getTime() + " - " + Utils.setDataTime(reminderRealm.getDayAlarm(), reminderRealm.getMonthAlarm()));
+        if (reminderRealm.getType().equals("text")){
             holder.reminderImage.setImageDrawable(context.getDrawable(R.drawable.ic_text_format_white_24dp));
-        }else if (reminder.getType().equals("image")){
+        }else if (reminderRealm.getType().equals("image")){
             holder.reminderImage.setImageDrawable(context.getDrawable(R.drawable.ic_image_white_24dp));
-        }else if (reminder.getType().equals("voice")){
+        }else if (reminderRealm.getType().equals("voice")){
             holder.reminderImage.setImageDrawable(context.getDrawable(R.drawable.ic_mic_white_24dp));
+        }
+
+        if (reminderRealm.getScheduleRelated() != 1){
+            ScheduleRealm scheduleRealm = ScheduleDAO.getById(reminderRealm.getScheduleRelated());
+            holder.backgroundColor.setBackgroundColor((int) scheduleRealm.getColorRealm().getColorNumber());
+            holder.reminderImage.setColorFilter(ContextCompat.getColor(context,R.color.mdtp_white));
         }
     }
 
     @Override
     public int getItemCount() {
-        return reminderList == null ? 0 : reminderList.size();
+        return reminderRealmList == null ? 0 : reminderRealmList.size();
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder{
@@ -70,6 +80,8 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.MyView
         TextView reminderDescript;
         @Bind(R.id.reminder_image_type)
         ImageView reminderImage;
+        @Bind(R.id.background_color)
+        RelativeLayout backgroundColor;
 
         public MyViewHolder(View itemView) {
             super(itemView);
@@ -78,11 +90,11 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.MyView
 
         @OnClick(R.id.reminder_card)
         public void clickReminder() {
-            listener.onReminderClick(reminderList.get(getAdapterPosition()));
+            listener.onReminderClick(reminderRealmList.get(getAdapterPosition()));
         }
     }
 
     public interface OnReminderClickListener {
-        void onReminderClick(Reminder reminder);
+        void onReminderClick(ReminderRealm reminderRealm);
     }
 }

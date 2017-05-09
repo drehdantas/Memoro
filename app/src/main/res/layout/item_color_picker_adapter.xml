@@ -2,8 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:layout_gravity="center"
-    android:layout_width="40dp"
-    android:layout_height="40dp"
+    android:layout_width="35dp"
+    android:layout_height="35dp"
     android:background="@drawable/color_selector_highlight">
 
     <RelativeLayout
@@ -12,8 +12,8 @@
 
         <ImageView
             android:id="@+id/color_imageview"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="31dp"
+            android:layout_height="31dp"
             android:background="@drawable/color_circle"
             android:clickable="true"
             android:layout_centerInParent="true"/>

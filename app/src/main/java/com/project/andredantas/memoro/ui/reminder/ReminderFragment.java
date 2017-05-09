@@ -9,9 +9,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.project.andredantas.memoro.model.ReminderRealm;
 import com.project.andredantas.memoro.ui.MainActivity;
 import com.project.andredantas.memoro.R;
-import com.project.andredantas.memoro.model.Reminder;
 import com.project.andredantas.memoro.model.dao.ReminderDAO;
 
 import java.util.ArrayList;
@@ -24,7 +24,7 @@ public class ReminderFragment extends Fragment implements ReminderAdapter.OnRemi
     @Bind(R.id.reminder_recycle)
     RecyclerView reminderRecycle;
 
-    public List<Reminder> listReminder = new ArrayList<>();
+    public List<ReminderRealm> listReminderRealm = new ArrayList<>();
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -35,10 +35,10 @@ public class ReminderFragment extends Fragment implements ReminderAdapter.OnRemi
     }
 
     @Override
-    public void onReminderClick(Reminder reminder) {
+    public void onReminderClick(ReminderRealm reminderRealm) {
         Intent intent = new Intent(getActivity(), CreateReminderActivity.class);
-        intent.putExtra("reminder", reminder.getId());
-        intent.putExtra("type", reminder.getType());
+        intent.putExtra("reminderRealm", reminderRealm.getId());
+        intent.putExtra("type", reminderRealm.getType());
         startActivity(intent);
     }
 
@@ -46,8 +46,8 @@ public class ReminderFragment extends Fragment implements ReminderAdapter.OnRemi
     public void onResume() {
         super.onResume();
         ((MainActivity) getActivity()).closeMenu();
-        listReminder = ReminderDAO.listReminders();
-        reminderRecycle.setAdapter(new ReminderAdapter(getActivity(), listReminder, this));
+        listReminderRealm = ReminderDAO.listReminders();
+        reminderRecycle.setAdapter(new ReminderAdapter(getActivity(), listReminderRealm, this));
         reminderRecycle.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
     }
 }

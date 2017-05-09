@@ -1,22 +1,19 @@
 package com.project.andredantas.memoro.utils;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.CursorLoader;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Build;
-import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
-import android.widget.TextView;
 
 import com.project.andredantas.memoro.R;
+import com.project.andredantas.memoro.model.ColorRealm;
+import com.project.andredantas.memoro.model.dao.ColorDAO;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -104,13 +101,18 @@ public class Utils {
         }
     }
 
-    public static List<Integer> getColors(Context context){
-        List<Integer> colors = new ArrayList<>();
-        colors.add(context.getColor(R.color.cyano));
-        colors.add(context.getColor(R.color.yellow));
-        colors.add(context.getColor(R.color.purple));
-        colors.add(context.getColor(R.color.red));
-        colors.add(context.getColor(R.color.green));
-        return colors;
+    public static void saveColors(Context context){
+        List<ColorRealm> colorRealms = new ArrayList<>();
+        colorRealms.add(new ColorRealm(context.getColor(R.color.cyano), Constants.CYANO));
+        colorRealms.add(new ColorRealm(context.getColor(R.color.yellow), Constants.YELLOW));
+        colorRealms.add(new ColorRealm(context.getColor(R.color.purple), Constants.PURPLE));
+        colorRealms.add(new ColorRealm(context.getColor(R.color.red), Constants.RED));
+        colorRealms.add(new ColorRealm(context.getColor(R.color.green), Constants.GREEN));
+        ColorDAO.saveColors(colorRealms);
+    }
+
+    public static List<ColorRealm> getColors(){
+        List<ColorRealm> colorRealms = ColorDAO.listColors();
+        return colorRealms;
     }
 }

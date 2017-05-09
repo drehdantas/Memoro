@@ -1,17 +1,17 @@
 package com.project.andredantas.memoro.model;
 
-import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
+import java.util.ArrayList;
+import java.util.List;
+
+import io.realm.Realm;
 
 /**
  * Created by Andre Dantas on 7/14/16.
  */
-public class Reminder extends RealmObject {
-    @PrimaryKey
+public class Reminder {
     private long id;
     private String title;
     private String descript;
-    private String color;
     private String type;
     private int dayAlarm;
     private int monthAlarm;
@@ -46,14 +46,6 @@ public class Reminder extends RealmObject {
 
     public void setDescript(String descript) {
         this.descript = descript;
-    }
-
-    public String getColor() {
-        return color;
-    }
-
-    public void setColor(String color) {
-        this.color = color;
     }
 
 
@@ -135,5 +127,61 @@ public class Reminder extends RealmObject {
 
     public void setMinutes(int minutes) {
         this.minutes = minutes;
+    }
+
+    public static List<Reminder> convertFromRealm(List<ReminderRealm> listRealm){
+        List<Reminder> reminders = new ArrayList<>();
+        for (ReminderRealm reminderRealm : listRealm) {
+            reminders.add(Reminder.copyFromRealm(reminderRealm));
+        }
+        return reminders;
+    }
+
+    private static Reminder copyFromRealm(ReminderRealm reminderRealm){
+        Reminder reminder = new Reminder();
+        reminder.setTime(reminderRealm.getTime());
+        reminder.setMinutes(reminderRealm.getMinutes());
+        reminder.setActive(reminderRealm.isActive());
+        reminder.setAudio(reminderRealm.getAudio());
+        reminder.setDayAlarm(reminderRealm.getDayAlarm());
+        reminder.setDescript(reminderRealm.getDescript());
+        reminder.setHour(reminderRealm.getHour());
+        reminder.setId(reminderRealm.getId());
+        reminder.setMonthAlarm(reminderRealm.getMonthAlarm());
+        reminder.setScheduleRelated(reminderRealm.getScheduleRelated());
+        reminder.setTitle(reminderRealm.getTitle());
+        reminder.setType(reminderRealm.getType());
+
+        return reminder;
+    }
+
+    public static List<ReminderRealm> convertFromNormal(List<Reminder> listNormal){
+        List<ReminderRealm> reminderRealmRealm = new ArrayList<>();
+        for (Reminder reminder : listNormal) {
+            reminderRealmRealm.add(Reminder.copyFromNormal(reminder));
+        }
+        return reminderRealmRealm;
+    }
+
+    public static ReminderRealm copyFromNormal(Reminder reminder){
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        ReminderRealm reminderRealm = new ReminderRealm();
+        reminderRealm.setTime(reminder.getTime());
+        reminderRealm.setMinutes(reminder.getMinutes());
+        reminderRealm.setActive(reminder.isActive());
+        reminderRealm.setAudio(reminder.getAudio());
+        reminderRealm.setDayAlarm(reminder.getDayAlarm());
+        reminderRealm.setDescript(reminder.getDescript());
+        reminderRealm.setHour(reminder.getHour());
+        reminderRealm.setId(reminder.getId());
+        reminderRealm.setMonthAlarm(reminder.getMonthAlarm());
+        reminderRealm.setScheduleRelated(reminder.getScheduleRelated());
+        reminderRealm.setTitle(reminder.getTitle());
+        reminderRealm.setType(reminder.getType());
+        reminderRealm.setImage(reminder.getImage());
+
+        realm.commitTransaction();
+        return reminderRealm;
     }
 }

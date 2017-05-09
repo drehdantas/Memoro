@@ -5,6 +5,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -15,11 +16,13 @@ import android.view.View;
 
 import com.github.clans.fab.FloatingActionMenu;
 import com.project.andredantas.memoro.R;
-import com.project.andredantas.memoro.model.Schedule;
+import com.project.andredantas.memoro.model.ScheduleRealm;
 import com.project.andredantas.memoro.model.dao.ScheduleDAO;
 import com.project.andredantas.memoro.ui.reminder.CreateReminderActivity;
 import com.project.andredantas.memoro.ui.schedules.SchedulesFragment;
 import com.project.andredantas.memoro.ui.reminder.ReminderFragment;
+import com.project.andredantas.memoro.utils.TinyDB;
+import com.project.andredantas.memoro.utils.Utils;
 
 import java.util.Arrays;
 import java.util.List;
@@ -34,7 +37,6 @@ public class MainActivity extends AppCompatActivity {
     private List<String> mTabNames;
     public PagerAdapter mPagerAdapter;
 
-    private Realm realm = Realm.getDefaultInstance();
 
     @Bind(R.id.view_pager)
     ViewPager mPager;
@@ -52,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         initViewPager();
         initView();
-        scheduleNone();
+        configApp();
     }
 
     public void initView(){
@@ -86,12 +88,13 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(mPager);
     }
 
-    public void scheduleNone(){
-        if (ScheduleDAO.getById(1) == null){
-            Schedule scheduleNenhum = new Schedule();
-            scheduleNenhum.setId(1);
-            scheduleNenhum.setTitle(getString(R.string.none));
-            ScheduleDAO.saveSchedule(realm, scheduleNenhum);
+    public void configApp(){
+        ScheduleDAO.createScheduleNone(this);
+
+        if (!TinyDB.getInstance(this).getBoolean("newlogin")) {
+            //SHOW SHOWCASE
+            Utils.saveColors(this);
+            TinyDB.getInstance(this).putBoolean("newlogin", true);
         }
     }
 

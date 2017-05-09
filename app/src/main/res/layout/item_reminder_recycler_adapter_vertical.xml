@@ -13,46 +13,51 @@
         card_view:cardElevation="4dp"
         card_view:cardUseCompatPadding="true">
 
-        <LinearLayout
-            android:gravity="center_vertical"
-            android:layout_margin="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:tint="@android:color/darker_gray"
-                android:id="@+id/reminder_image_type"
-                android:background="@drawable/ic_image_white_24dp"
-                android:layout_width="40dp"
-                android:layout_height="40dp" />
+        <RelativeLayout
+            android:id="@+id/background_color"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
             <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:gravity="center_vertical"
+                android:layout_margin="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:orientation="horizontal">
 
-                <TextView
-                    android:textColor="@android:color/background_dark"
-                    android:textSize="16sp"
-                    android:layout_marginLeft="10dp"
-                    android:id="@+id/reminder_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Lorem ipsum"
-                    android:textStyle="bold" />
+                <ImageView
+                    android:tint="@android:color/darker_gray"
+                    android:id="@+id/reminder_image_type"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp" />
 
-                <TextView
-                    android:textColor="@android:color/background_dark"
-                    android:textSize="14sp"
-                    android:layout_marginLeft="10dp"
-                    android:id="@+id/reminderDescript"
+                <LinearLayout
+                    android:orientation="vertical"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Lorem ipsum" />
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:textColor="@android:color/background_dark"
+                        android:textSize="16sp"
+                        android:layout_marginLeft="10dp"
+                        android:id="@+id/reminder_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Lorem ipsum"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:textColor="@android:color/background_dark"
+                        android:textSize="14sp"
+                        android:layout_marginLeft="10dp"
+                        android:id="@+id/reminderDescript"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Lorem ipsum" />
+                </LinearLayout>
+
             </LinearLayout>
-
-        </LinearLayout>
+        </RelativeLayout>
 
     </android.support.v7.widget.CardView>
 

@@ -5,10 +5,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.project.andredantas.memoro.R;
-import com.project.andredantas.memoro.model.Schedule;
+import com.project.andredantas.memoro.model.ScheduleRealm;
+import com.project.andredantas.memoro.utils.Constants;
 
 import java.util.Collections;
 import java.util.List;
@@ -25,13 +27,13 @@ public class SchedulesAdapter extends RecyclerView.Adapter<SchedulesAdapter.MyVi
     private String day;
     private LayoutInflater layoutInflater;
     private OnScheduleClickListener listener;
-    private List<Schedule> scheduleList = Collections.EMPTY_LIST;
+    private List<ScheduleRealm> scheduleRealmList = Collections.EMPTY_LIST;
 
-    public SchedulesAdapter(Context context, List<Schedule> scheduleList, String day, OnScheduleClickListener listener) {
+    public SchedulesAdapter(Context context, List<ScheduleRealm> scheduleRealmList, String day, OnScheduleClickListener listener) {
         if(context == null)
             return;
         this.listener = listener;
-        this.scheduleList = scheduleList;
+        this.scheduleRealmList = scheduleRealmList;
         this.day = day;
         this.layoutInflater = LayoutInflater.from(context);
     }
@@ -44,14 +46,17 @@ public class SchedulesAdapter extends RecyclerView.Adapter<SchedulesAdapter.MyVi
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        Schedule schedule = scheduleList.get(position);
-        holder.scheduleTitle.setText(schedule.getTitle());
-        holder.scheduleHour.setText(schedule.getTime());
+        ScheduleRealm scheduleRealm = scheduleRealmList.get(position);
+        holder.scheduleTitle.setText(scheduleRealm.getTitle());
+        holder.scheduleHour.setText(scheduleRealm.getTime());
+        if (!scheduleRealm.getColorRealm().getColor().equals(Constants.NO_COLOR)){
+            holder.scheduleCard.setBackgroundColor((int) scheduleRealm.getColorRealm().getColorNumber());
+        }
     }
 
     @Override
     public int getItemCount() {
-        return scheduleList == null ? 0 : scheduleList.size();
+        return scheduleRealmList == null ? 0 : scheduleRealmList.size();
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder{
@@ -59,6 +64,8 @@ public class SchedulesAdapter extends RecyclerView.Adapter<SchedulesAdapter.MyVi
         TextView scheduleTitle;
         @Bind(R.id.horario_hora)
         TextView scheduleHour;
+        @Bind(R.id.background_color)
+        RelativeLayout scheduleCard;
 
         public MyViewHolder(View itemView) {
             super(itemView);
@@ -67,11 +74,11 @@ public class SchedulesAdapter extends RecyclerView.Adapter<SchedulesAdapter.MyVi
 
         @OnClick(R.id.schedule_card)
         public void onClickImageTrending() {
-            listener.onScheduleClick(scheduleList.get(getAdapterPosition()), day);
+            listener.onScheduleClick(scheduleRealmList.get(getAdapterPosition()), day);
         }
     }
 
-    public interface OnScheduleClickListener {
-        void onScheduleClick(Schedule schedule, String day);
+    interface OnScheduleClickListener {
+        void onScheduleClick(ScheduleRealm scheduleRealm, String day);
     }
 }

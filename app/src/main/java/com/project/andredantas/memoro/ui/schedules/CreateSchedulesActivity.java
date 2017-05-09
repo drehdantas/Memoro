@@ -21,16 +21,16 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.project.andredantas.memoro.R;
+import com.project.andredantas.memoro.model.ColorRealm;
+import com.project.andredantas.memoro.model.ScheduleRealm;
 import com.project.andredantas.memoro.model.Schedule;
-import com.project.andredantas.memoro.model.ScheduleNormal;
 import com.project.andredantas.memoro.model.dao.ScheduleDAO;
+import com.project.andredantas.memoro.utils.Constants;
 import com.project.andredantas.memoro.utils.Utils;
 import com.project.andredantas.memoro.utils.colors.RecyclerViewColorAdapter;
 import com.project.andredantas.memoro.utils.colors.SpacesItemDecoration;
 
 import java.sql.Time;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
@@ -39,14 +39,14 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.realm.Realm;
 
-public class CreateSchedulesActivity extends AppCompatActivity {
+public class CreateSchedulesActivity extends AppCompatActivity implements RecyclerViewColorAdapter.OnColorClickListener{
     private String day, time;
-    private Schedule schedule;
+    private ColorRealm colorRealmSelected;
+    private ScheduleRealm scheduleRealm;
     private TimePickerDialog mTimePicker;
     private int selectedHour, selectedMinute;
-    private Realm realm = Realm.getDefaultInstance();
     private RecyclerViewColorAdapter colorAdapter;
-    private List<Integer> mColors;
+    private List<ColorRealm> mColorRealms;
 
     @Bind(R.id.schedule_toolbar)
     Toolbar toolbar;
@@ -81,8 +81,8 @@ public class CreateSchedulesActivity extends AppCompatActivity {
             if (extras.getString("day") != null) {
                 day = extras.getString("day");
             }
-            if (extras.getLong("schedule") != 0) {
-                schedule = ScheduleDAO.getById(extras.getLong("schedule"));
+            if (extras.getLong("scheduleRealm") != 0) {
+                scheduleRealm = ScheduleDAO.getById(extras.getLong("scheduleRealm"));
             }
         }
     }
@@ -93,21 +93,21 @@ public class CreateSchedulesActivity extends AppCompatActivity {
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
-            getSupportActionBar().setTitle(schedule != null ? getString(R.string.edit_schedule) : getString(R.string.create_schedule));
+            getSupportActionBar().setTitle(scheduleRealm != null ? getString(R.string.edit_schedule) : getString(R.string.create_schedule));
         }
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         dayWeek.setText(day);
 
-        //edit schedule
-        if (schedule != null) {
-            textTime.setText(schedule.getTime());
-            scheduleTitle.setText(schedule.getTitle());
-            scheduleDescript.setText(schedule.getDescript());
+        //edit scheduleRealm
+        if (scheduleRealm != null) {
+            textTime.setText(scheduleRealm.getTime());
+            scheduleTitle.setText(scheduleRealm.getTitle());
+            scheduleDescript.setText(scheduleRealm.getDescript());
             deleteSchedule.setVisibility(View.VISIBLE);
             setTextWithCursorFinal(scheduleTitle);
             setTextWithCursorFinal(scheduleDescript);
         } else {
-            //create schedule
+            //create scheduleRealm
             deleteSchedule.setVisibility(View.GONE);
             selectedHour = new Time(System.currentTimeMillis()).getHours();
             selectedMinute = new Time(System.currentTimeMillis()).getMinutes();
@@ -139,14 +139,15 @@ public class CreateSchedulesActivity extends AppCompatActivity {
             }
         });
 
-        mColors = Utils.getColors(this);
+        colorRealmSelected = new ColorRealm(0, Constants.NO_COLOR);
+        mColorRealms = Utils.getColors();
 
-        // Color Recycler View
-        colorAdapter = new RecyclerViewColorAdapter(this);
-        colorAdapter.setColors(mColors);
+        // ColorRealm Recycler View
+        colorAdapter = new RecyclerViewColorAdapter(this, this);
+        colorAdapter.setColorRealms(mColorRealms);
         LinearLayoutManager colorLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         colorRecyclerView.setLayoutManager(colorLayoutManager);
-        colorRecyclerView.addItemDecoration(new SpacesItemDecoration(this, mColors.size(), 20));
+        colorRecyclerView.addItemDecoration(new SpacesItemDecoration(this, mColorRealms.size(), 20));
         colorRecyclerView.setHasFixedSize(true);
         colorRecyclerView.setAdapter(colorAdapter);
     }
@@ -176,17 +177,17 @@ public class CreateSchedulesActivity extends AppCompatActivity {
                 if (scheduleTitle.getText().toString().equals("") || scheduleTitle.getText() == null) {
                     Snackbar.make(this.findViewById(android.R.id.content), getString(R.string.schedule_need_title), Snackbar.LENGTH_SHORT).show();
                 } else {
-                    if (schedule != null) {
-                        //edit schedule
-                        ScheduleDAO.updateSchedule(realm, schedule.getId(), scheduleTitle.getText().toString(), scheduleDescript.getText().toString(), selectedHour, selectedMinute, time);
+                    if (scheduleRealm != null) {
+                        //edit scheduleRealm
+                        ScheduleDAO.updateSchedule(scheduleRealm.getId(), scheduleTitle.getText().toString(), scheduleDescript.getText().toString(), selectedHour, selectedMinute, time, colorRealmSelected);
                         finish();
                         Toast.makeText(this, getString(R.string.schedule_update_message), Toast.LENGTH_LONG).show();
                     } else {
-                        //create schedule
-                        schedule = new Schedule();
-                        schedule = ScheduleNormal.copyFromNormal(setSchedule(new ScheduleNormal()));
+                        //create scheduleRealm
+                        scheduleRealm = new ScheduleRealm();
+                        scheduleRealm = Schedule.copyFromNormal(setSchedule(new Schedule()));
 
-                        ScheduleDAO.saveSchedule(realm, schedule);
+                        ScheduleDAO.saveSchedule(scheduleRealm);
                         finish();
                         Toast.makeText(this, getString(R.string.schedule_create_message), Toast.LENGTH_LONG).show();
                     }
@@ -199,12 +200,12 @@ public class CreateSchedulesActivity extends AppCompatActivity {
 
     @OnClick(R.id.delete_schedule)
     public void deleteSchedule() {
-        ScheduleDAO.deleteSchedule(realm, schedule);
+        ScheduleDAO.deleteSchedule(scheduleRealm);
         finish();
         Toast.makeText(this, getString(R.string.schedule_deleted_message), Toast.LENGTH_LONG).show();
     }
 
-    public ScheduleNormal setSchedule(ScheduleNormal schedule) {
+    public Schedule setSchedule(Schedule schedule) {
         schedule.setId(System.currentTimeMillis());
 
         schedule.setTitle(scheduleTitle.getText().toString());
@@ -214,6 +215,7 @@ public class CreateSchedulesActivity extends AppCompatActivity {
         schedule.setHour(selectedHour);
         schedule.setMinutes(selectedMinute);
         schedule.setTime(time);
+        schedule.setColorRealm(colorRealmSelected);
 
         return schedule;
     }
@@ -225,4 +227,12 @@ public class CreateSchedulesActivity extends AppCompatActivity {
         Selection.setSelection(etext, position);
     }
 
+    @Override
+    public void onColorClick(ColorRealm colorRealm) {
+        if (colorRealm != null){
+            colorRealmSelected = colorRealm;
+        }else{
+            colorRealmSelected = new ColorRealm(0, Constants.NO_COLOR);
+        }
+    }
 }
