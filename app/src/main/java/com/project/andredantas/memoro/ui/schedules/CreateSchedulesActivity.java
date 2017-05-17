@@ -1,7 +1,13 @@
 package com.project.andredantas.memoro.ui.schedules;
 
+import android.app.AlarmManager;
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -25,6 +31,7 @@ import com.project.andredantas.memoro.model.ColorRealm;
 import com.project.andredantas.memoro.model.ScheduleRealm;
 import com.project.andredantas.memoro.model.Schedule;
 import com.project.andredantas.memoro.model.dao.ScheduleDAO;
+import com.project.andredantas.memoro.notification.NotificationPublisher;
 import com.project.andredantas.memoro.utils.Constants;
 import com.project.andredantas.memoro.utils.Utils;
 import com.project.andredantas.memoro.utils.colors.RecyclerViewColorAdapter;
@@ -88,6 +95,8 @@ public class CreateSchedulesActivity extends AppCompatActivity implements Recycl
     }
 
     public void initView() {
+        scheduleNotification(getNotification("10 second delay"), 10000);
+
         setSupportActionBar(toolbar);
 
         if (getSupportActionBar() != null) {
@@ -95,8 +104,21 @@ public class CreateSchedulesActivity extends AppCompatActivity implements Recycl
             getSupportActionBar().setDisplayShowHomeEnabled(true);
             getSupportActionBar().setTitle(scheduleRealm != null ? getString(R.string.edit_schedule) : getString(R.string.create_schedule));
         }
+
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         dayWeek.setText(day);
+
+        colorRealmSelected = new ColorRealm(0, Constants.NO_COLOR);
+        mColorRealms = Utils.getColors();
+
+        // ColorRealm Recycler View
+        colorAdapter = new RecyclerViewColorAdapter(this, this);
+        colorAdapter.setColorRealms(mColorRealms);
+        LinearLayoutManager colorLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        colorRecyclerView.setLayoutManager(colorLayoutManager);
+        colorRecyclerView.addItemDecoration(new SpacesItemDecoration(this, mColorRealms.size(), 20));
+        colorRecyclerView.setHasFixedSize(true);
+        colorRecyclerView.setAdapter(colorAdapter);
 
         //edit scheduleRealm
         if (scheduleRealm != null) {
@@ -104,6 +126,7 @@ public class CreateSchedulesActivity extends AppCompatActivity implements Recycl
             scheduleTitle.setText(scheduleRealm.getTitle());
             scheduleDescript.setText(scheduleRealm.getDescript());
             deleteSchedule.setVisibility(View.VISIBLE);
+            colorAdapter.setColorPosition(scheduleRealm.getColorRealm().getColorNumber());
             setTextWithCursorFinal(scheduleTitle);
             setTextWithCursorFinal(scheduleDescript);
         } else {
@@ -138,18 +161,6 @@ public class CreateSchedulesActivity extends AppCompatActivity implements Recycl
 
             }
         });
-
-        colorRealmSelected = new ColorRealm(0, Constants.NO_COLOR);
-        mColorRealms = Utils.getColors();
-
-        // ColorRealm Recycler View
-        colorAdapter = new RecyclerViewColorAdapter(this, this);
-        colorAdapter.setColorRealms(mColorRealms);
-        LinearLayoutManager colorLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        colorRecyclerView.setLayoutManager(colorLayoutManager);
-        colorRecyclerView.addItemDecoration(new SpacesItemDecoration(this, mColorRealms.size(), 20));
-        colorRecyclerView.setHasFixedSize(true);
-        colorRecyclerView.setAdapter(colorAdapter);
     }
 
     public void setSelectedHour(int selectedHour){
@@ -234,5 +245,25 @@ public class CreateSchedulesActivity extends AppCompatActivity implements Recycl
         }else{
             colorRealmSelected = new ColorRealm(0, Constants.NO_COLOR);
         }
+    }
+
+    private void scheduleNotification(Notification notification, int delay) {
+
+        Intent notificationIntent = new Intent(this, NotificationPublisher.class);
+        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, 1);
+        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION, notification);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        long futureInMillis = SystemClock.elapsedRealtime() + delay;
+        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, futureInMillis, pendingIntent);
+    }
+
+    private Notification getNotification(String content) {
+        Notification.Builder builder = new Notification.Builder(this);
+        builder.setContentTitle("Bife de vaca");
+        builder.setContentText(content);
+        builder.setSmallIcon(R.mipmap.ic_launcher);
+        return builder.build();
     }
 }

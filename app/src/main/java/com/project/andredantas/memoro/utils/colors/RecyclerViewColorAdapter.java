@@ -25,6 +25,7 @@ public class RecyclerViewColorAdapter extends RecyclerView.Adapter {
     private LayoutInflater layoutInflater;
     private List<ColorRealm> colorRealms;
     private int selectedPos = 0;
+    private long colorNumberSelected;
     private OnColorClickListener listener;
 
     public RecyclerViewColorAdapter(Context context, OnColorClickListener listener) {
@@ -39,6 +40,12 @@ public class RecyclerViewColorAdapter extends RecyclerView.Adapter {
 
     public void setColorRealms(List<ColorRealm> colorRealms) {
         this.colorRealms = colorRealms;
+    }
+
+    public void setColorPosition(long colorNumber){
+        colorNumberSelected = colorNumber;
+        selectedPos = -1;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -59,10 +66,11 @@ public class RecyclerViewColorAdapter extends RecyclerView.Adapter {
             GradientDrawable drawable = (GradientDrawable) context.getResources().getDrawable(R.drawable.color_circle);
             drawable.setStroke(1, context.getResources().getColor(R.color.darker_gray));
 
+            int color = (int) colorRealms.get(position - NO_COLOR).getColorNumber();
             ColorHolder colorHolder = (ColorHolder) holder;
-            drawable.setColor((int) colorRealms.get(position - NO_COLOR).getColorNumber());
+            drawable.setColor(color);
             colorHolder.imageView.setBackground(drawable);
-            colorHolder.itemView.setSelected(selectedPos == position);
+            colorHolder.itemView.setSelected(selectedPos == position || color == colorNumberSelected);
         }
     }
 

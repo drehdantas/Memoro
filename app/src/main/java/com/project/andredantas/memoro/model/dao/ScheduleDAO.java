@@ -24,7 +24,6 @@ public class ScheduleDAO {
         realm.beginTransaction();
         realm.copyToRealm(scheduleRealm);
         realm.commitTransaction();
-        realm.close();
     }
 
     public static void updateSchedule(long id, String title, String descript, int hour, int minutes, String time, ColorRealm colorRealm) {
@@ -39,7 +38,6 @@ public class ScheduleDAO {
             scheduleRealm.setTime(time);
         }
         realm.commitTransaction();
-        realm.close();
     }
 
     public static void deleteSchedule(ScheduleRealm scheduleRealm) {
@@ -47,7 +45,6 @@ public class ScheduleDAO {
         scheduleRealm.setActive(false);
         realm.copyToRealmOrUpdate(scheduleRealm);
         realm.commitTransaction();
-        realm.close();
     }
 
     public static ScheduleRealm getById(long scheduleId){
