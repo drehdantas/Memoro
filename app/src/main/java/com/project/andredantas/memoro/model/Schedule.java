@@ -9,6 +9,14 @@ import io.realm.Realm;
  * Created by Andre Dantas on 7/14/16.
  */
 public class Schedule {
+    public static int NOT_ALERT = 0;
+    public static int ONCE_ALERT = 1;
+    public static int ALWAYS_ALERT = 2;
+
+    public static int ALERT_ON_TIME = 0;
+    public static int ALERT_10_BEFORE = 1;
+    public static int ALERT_30_BEFORE = 2;
+
     private long id;
     private String day;
     private String title;
@@ -17,6 +25,8 @@ public class Schedule {
     private int hour;
     private int minutes;
     private boolean active = true;
+    private int alertType;
+    private int alertFrequency;
     private ColorRealm colorRealm;
 
     public boolean isActive() {
@@ -91,6 +101,22 @@ public class Schedule {
         this.colorRealm = colorRealm;
     }
 
+    public int getAlertType() {
+        return alertType;
+    }
+
+    public void setAlertType(int alertType) {
+        this.alertType = alertType;
+    }
+
+    public int getAlertFrequency() {
+        return alertFrequency;
+    }
+
+    public void setAlertFrequency(int alertFrequency) {
+        this.alertFrequency = alertFrequency;
+    }
+
     public static List<Schedule> convertFromRealm(List<ScheduleRealm> listRealm){
         List<Schedule> schedules = new ArrayList<>();
         for (ScheduleRealm scheduleRealm : listRealm) {
@@ -110,6 +136,8 @@ public class Schedule {
         schedule.setId(scheduleRealm.getId());
         schedule.setTime(scheduleRealm.getTime());
         schedule.setTitle(scheduleRealm.getTitle());
+        schedule.setAlertType(scheduleRealm.getAlertType());
+        schedule.setAlertFrequency(scheduleRealm.getAlertFrequency());
         return schedule;
     }
 
@@ -134,6 +162,8 @@ public class Schedule {
         scheduleRealm.setId(schedule.getId());
         scheduleRealm.setTime(schedule.getTime());
         scheduleRealm.setTitle(schedule.getTitle());
+        scheduleRealm.setAlertType(schedule.getAlertType());
+        scheduleRealm.setAlertFrequency(schedule.getAlertFrequency());
         realm.commitTransaction();
         return scheduleRealm;
     }

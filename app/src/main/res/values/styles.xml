@@ -12,4 +12,10 @@
 
     </style>
 
+    <!-- Radio button theme. -->
+    <style name="RadioButtonTheme" parent="@style/Theme.AppCompat.Light.NoActionBar">
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorControlNormal">@android:color/darker_gray</item>
+    </style>
+
 </resources>

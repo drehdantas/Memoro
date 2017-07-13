@@ -57,4 +57,12 @@
     <string name="recording">Recording</string>
     <string name="color">Color</string>
 
+    <string name="alert">Alert:</string>
+    <string name="alert_frequency">Alert Frequency:</string>
+    <string name="no_notification">Do not alert me</string>
+    <string name="one_notification">Once</string>
+    <string name="always_notification">Always</string>
+    <string name="notification_0min">On time</string>
+    <string name="notification_10min">10 minutes before</string>
+    <string name="notification_30min">30 minutes before</string>
 </resources>

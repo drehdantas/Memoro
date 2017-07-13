@@ -22,6 +22,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -51,7 +52,7 @@ public class CreateSchedulesActivity extends AppCompatActivity implements Recycl
     private ColorRealm colorRealmSelected;
     private ScheduleRealm scheduleRealm;
     private TimePickerDialog mTimePicker;
-    private int selectedHour, selectedMinute;
+    private int selectedHour, selectedMinute, alertType, alertFrequency;
     private RecyclerViewColorAdapter colorAdapter;
     private List<ColorRealm> mColorRealms;
 
@@ -69,9 +70,21 @@ public class CreateSchedulesActivity extends AppCompatActivity implements Recycl
     EditText scheduleDescript;
     @Bind(R.id.delete_schedule)
     Button deleteSchedule;
-
     @Bind(R.id.color_picker_recycler_view)
     RecyclerView colorRecyclerView;
+
+    @Bind(R.id.no_alert)
+    RadioButton radioDoNotAlert;
+    @Bind(R.id.once_alert)
+    RadioButton radioOnceAlert;
+    @Bind(R.id.always_alert)
+    RadioButton radioAlwaysAlert;
+    @Bind(R.id.on_time)
+    RadioButton radioOnTimeAlert;
+    @Bind(R.id.ten_minutes)
+    RadioButton radioTenMinAlert;
+    @Bind(R.id.thirty_minutes)
+    RadioButton radioThirMinAlert;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -161,6 +174,75 @@ public class CreateSchedulesActivity extends AppCompatActivity implements Recycl
 
             }
         });
+
+
+        radioDoNotAlert.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertType = Schedule.NOT_ALERT;
+                alertFrequency = 666; //A very different value from the constants
+
+                radioOnceAlert.setChecked(false);
+                radioAlwaysAlert.setChecked(false);
+
+                setEnableRadioButtons(false);
+            }
+        });
+
+        radioOnceAlert.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertType = Schedule.ONCE_ALERT;
+                radioDoNotAlert.setChecked(false);
+                radioAlwaysAlert.setChecked(false);
+
+                setEnableRadioButtons(true);
+            }
+        });
+
+        radioAlwaysAlert.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertType = Schedule.ALWAYS_ALERT;
+                radioDoNotAlert.setChecked(false);
+                radioOnceAlert.setChecked(false);
+
+                setEnableRadioButtons(true);
+            }
+        });
+
+        radioOnTimeAlert.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertFrequency = Schedule.ALERT_ON_TIME;
+                radioTenMinAlert.setChecked(false);
+                radioThirMinAlert.setChecked(false);
+            }
+        });
+
+        radioTenMinAlert.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertFrequency = Schedule.ALERT_10_BEFORE;
+                radioOnTimeAlert.setChecked(false);
+                radioThirMinAlert.setChecked(false);
+            }
+        });
+
+        radioThirMinAlert.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertFrequency = Schedule.ALERT_30_BEFORE;
+                radioOnTimeAlert.setChecked(false);
+                radioTenMinAlert.setChecked(false);
+            }
+        });
+    }
+
+    public void setEnableRadioButtons(boolean enable){
+        radioOnTimeAlert.setEnabled(enable);
+        radioTenMinAlert.setEnabled(enable);
+        radioThirMinAlert.setEnabled(enable);
     }
 
     public void setSelectedHour(int selectedHour){
@@ -190,7 +272,7 @@ public class CreateSchedulesActivity extends AppCompatActivity implements Recycl
                 } else {
                     if (scheduleRealm != null) {
                         //edit scheduleRealm
-                        ScheduleDAO.updateSchedule(scheduleRealm.getId(), scheduleTitle.getText().toString(), scheduleDescript.getText().toString(), selectedHour, selectedMinute, time, colorRealmSelected);
+                        ScheduleDAO.updateSchedule(scheduleRealm.getId(), scheduleTitle.getText().toString(), scheduleDescript.getText().toString(), selectedHour, selectedMinute, time, colorRealmSelected, alertType, alertFrequency);
                         finish();
                         Toast.makeText(this, getString(R.string.schedule_update_message), Toast.LENGTH_LONG).show();
                     } else {
@@ -228,6 +310,9 @@ public class CreateSchedulesActivity extends AppCompatActivity implements Recycl
         schedule.setTime(time);
         schedule.setColorRealm(colorRealmSelected);
 
+        schedule.setAlertType(alertType);
+        schedule.setAlertFrequency(alertFrequency);
+
         return schedule;
     }
 
@@ -248,7 +333,6 @@ public class CreateSchedulesActivity extends AppCompatActivity implements Recycl
     }
 
     private void scheduleNotification(Notification notification, int delay) {
-
         Intent notificationIntent = new Intent(this, NotificationPublisher.class);
         notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, 1);
         notificationIntent.putExtra(NotificationPublisher.NOTIFICATION, notification);

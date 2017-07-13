@@ -2,8 +2,8 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_selected="true" >
         <shape android:shape="oval">
-            <gradient android:startColor="#aaaaaa"
-                android:endColor="#aaaaaa" />
+            <gradient android:startColor="#000000"
+                android:endColor="#000000" />
             <corners android:radius="8dip"/>
         </shape>
     </item>

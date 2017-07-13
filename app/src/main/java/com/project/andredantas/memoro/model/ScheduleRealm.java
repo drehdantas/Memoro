@@ -22,6 +22,8 @@ public class ScheduleRealm extends RealmObject{
     private int hour;
     private int minutes;
     private boolean active = true;
+    private int alertType;
+    private int alertFrequency;
 
     public boolean isActive() {
         return active;
@@ -93,5 +95,21 @@ public class ScheduleRealm extends RealmObject{
 
     public void setColorRealm(ColorRealm colorRealm) {
         this.colorRealm = colorRealm;
+    }
+
+    public int getAlertType() {
+        return alertType;
+    }
+
+    public void setAlertType(int alertType) {
+        this.alertType = alertType;
+    }
+
+    public int getAlertFrequency() {
+        return alertFrequency;
+    }
+
+    public void setAlertFrequency(int alertFrequency) {
+        this.alertFrequency = alertFrequency;
     }
 }

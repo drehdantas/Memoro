@@ -26,12 +26,14 @@ public class ScheduleDAO {
         realm.commitTransaction();
     }
 
-    public static void updateSchedule(long id, String title, String descript, int hour, int minutes, String time, ColorRealm colorRealm) {
+    public static void updateSchedule(long id, String title, String descript, int hour, int minutes, String time, ColorRealm colorRealm, int alertType, int alertFrequency) {
         realm.beginTransaction();
         ScheduleRealm scheduleRealm = getById(id);
         scheduleRealm.setTitle(title);
         scheduleRealm.setDescript(descript);
         scheduleRealm.setColorRealm(colorRealm);
+        scheduleRealm.setAlertType(alertType);
+        scheduleRealm.setAlertFrequency(alertFrequency);
         if (time != null && !time.equals("")){
             scheduleRealm.setHour(hour);
             scheduleRealm.setMinutes(minutes);

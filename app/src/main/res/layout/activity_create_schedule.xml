@@ -110,6 +110,97 @@
 
         </LinearLayout>
 
+        <TextView
+            android:layout_marginTop="14dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:text="@string/alert"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:theme="@style/RadioButtonTheme"
+                android:id="@+id/no_alert"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="@string/no_notification"
+                android:textColor="@android:color/background_dark" />
+
+            <RadioButton
+                android:theme="@style/RadioButtonTheme"
+                android:id="@+id/once_alert"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/one_notification"
+                android:textColor="@android:color/background_dark" />
+
+            <RadioButton
+                android:theme="@style/RadioButtonTheme"
+                android:id="@+id/always_alert"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/always_notification"
+                android:textColor="@android:color/background_dark" />
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_marginTop="14dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:text="@string/alert_frequency"/>
+
+        <RelativeLayout
+            android:layout_marginTop="14dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:theme="@style/RadioButtonTheme"
+                    android:enabled="false"
+                    android:layout_gravity="center_vertical"
+                    android:id="@+id/on_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="@string/notification_0min"
+                    android:textColor="@android:color/background_dark" />
+
+                <RadioButton
+                    android:theme="@style/RadioButtonTheme"
+                    android:enabled="false"
+                    android:layout_gravity="center_vertical"
+                    android:id="@+id/ten_minutes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/notification_10min"
+                    android:textColor="@android:color/background_dark" />
+
+                <RadioButton
+                    android:theme="@style/RadioButtonTheme"
+                    android:enabled="false"
+                    android:layout_gravity="center_vertical"
+                    android:id="@+id/thirty_minutes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/notification_30min"
+                    android:textColor="@android:color/background_dark" />
+
+            </LinearLayout>
+        </RelativeLayout>
+
         <include layout="@layout/cardview_colors"/>
 
     </LinearLayout>
