@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.project.andredantas.memoro.R;
 import com.project.andredantas.memoro.model.ScheduleRealm;
 import com.project.andredantas.memoro.utils.Constants;
+import com.project.andredantas.memoro.utils.Utils;
 
 import java.util.Collections;
 import java.util.List;
@@ -25,6 +26,7 @@ import butterknife.OnClick;
 public class SchedulesAdapter extends RecyclerView.Adapter<SchedulesAdapter.MyViewHolder>{
 
     private String day;
+    private Context context;
     private LayoutInflater layoutInflater;
     private OnScheduleClickListener listener;
     private List<ScheduleRealm> scheduleRealmList = Collections.EMPTY_LIST;
@@ -32,6 +34,7 @@ public class SchedulesAdapter extends RecyclerView.Adapter<SchedulesAdapter.MyVi
     public SchedulesAdapter(Context context, List<ScheduleRealm> scheduleRealmList, String day, OnScheduleClickListener listener) {
         if(context == null)
             return;
+        this.context = context;
         this.listener = listener;
         this.scheduleRealmList = scheduleRealmList;
         this.day = day;
@@ -49,8 +52,8 @@ public class SchedulesAdapter extends RecyclerView.Adapter<SchedulesAdapter.MyVi
         ScheduleRealm scheduleRealm = scheduleRealmList.get(position);
         holder.scheduleTitle.setText(scheduleRealm.getTitle());
         holder.scheduleHour.setText(scheduleRealm.getTime());
-        if (!scheduleRealm.getColorRealm().getColor().equals(Constants.NO_COLOR)){
-            holder.scheduleCard.setBackgroundColor((int) scheduleRealm.getColorRealm().getColorNumber());
+        if (scheduleRealm.getColor() != 0){
+            holder.scheduleCard.setBackgroundColor(Utils.getColors(scheduleRealm.getColor(), context));
         }
     }
 
@@ -74,11 +77,11 @@ public class SchedulesAdapter extends RecyclerView.Adapter<SchedulesAdapter.MyVi
 
         @OnClick(R.id.schedule_card)
         public void onClickImageTrending() {
-            listener.onScheduleClick(scheduleRealmList.get(getAdapterPosition()), day);
+            listener.onScheduleClick(scheduleRealmList.get(getAdapterPosition()), getAdapterPosition() + 1);
         }
     }
 
     interface OnScheduleClickListener {
-        void onScheduleClick(ScheduleRealm scheduleRealm, String day);
+        void onScheduleClick(ScheduleRealm scheduleRealm, int day);
     }
 }

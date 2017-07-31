@@ -1,13 +1,7 @@
 package com.project.andredantas.memoro.ui.schedules;
 
-import android.app.AlarmManager;
-import android.app.Notification;
-import android.app.PendingIntent;
 import android.app.TimePickerDialog;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -28,33 +22,29 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.project.andredantas.memoro.R;
-import com.project.andredantas.memoro.model.ColorRealm;
 import com.project.andredantas.memoro.model.ScheduleRealm;
 import com.project.andredantas.memoro.model.Schedule;
 import com.project.andredantas.memoro.model.dao.ScheduleDAO;
-import com.project.andredantas.memoro.notification.NotificationPublisher;
 import com.project.andredantas.memoro.utils.Constants;
 import com.project.andredantas.memoro.utils.Utils;
 import com.project.andredantas.memoro.utils.colors.RecyclerViewColorAdapter;
 import com.project.andredantas.memoro.utils.colors.SpacesItemDecoration;
 
 import java.sql.Time;
+import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.realm.Realm;
 
 public class CreateSchedulesActivity extends AppCompatActivity implements RecyclerViewColorAdapter.OnColorClickListener{
-    private String day, time;
-    private ColorRealm colorRealmSelected;
+    private String time;
+    private int daySelected, colorSelected;
     private ScheduleRealm scheduleRealm;
     private TimePickerDialog mTimePicker;
     private int selectedHour, selectedMinute, alertType, alertFrequency;
     private RecyclerViewColorAdapter colorAdapter;
-    private List<ColorRealm> mColorRealms;
 
     @Bind(R.id.schedule_toolbar)
     Toolbar toolbar;
@@ -98,8 +88,8 @@ public class CreateSchedulesActivity extends AppCompatActivity implements Recycl
     private void onIntentReceived() {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            if (extras.getString("day") != null) {
-                day = extras.getString("day");
+            if (extras.getInt("day") != 0) {
+                daySelected = extras.getInt("day");
             }
             if (extras.getLong("scheduleRealm") != 0) {
                 scheduleRealm = ScheduleDAO.getById(extras.getLong("scheduleRealm"));
@@ -108,8 +98,6 @@ public class CreateSchedulesActivity extends AppCompatActivity implements Recycl
     }
 
     public void initView() {
-        scheduleNotification(getNotification("10 second delay"), 10000);
-
         setSupportActionBar(toolbar);
 
         if (getSupportActionBar() != null) {
@@ -119,38 +107,18 @@ public class CreateSchedulesActivity extends AppCompatActivity implements Recycl
         }
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-        dayWeek.setText(day);
+        dayWeek.setText(Utils.getDayofWeek(daySelected, this));
 
-        colorRealmSelected = new ColorRealm(0, Constants.NO_COLOR);
-        mColorRealms = Utils.getColors();
+        colorSelected = Constants.NO_COLOR;
 
         // ColorRealm Recycler View
         colorAdapter = new RecyclerViewColorAdapter(this, this);
-        colorAdapter.setColorRealms(mColorRealms);
+
         LinearLayoutManager colorLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         colorRecyclerView.setLayoutManager(colorLayoutManager);
-        colorRecyclerView.addItemDecoration(new SpacesItemDecoration(this, mColorRealms.size(), 20));
+        colorRecyclerView.addItemDecoration(new SpacesItemDecoration(this, Utils.colorMap.size(), 20));
         colorRecyclerView.setHasFixedSize(true);
         colorRecyclerView.setAdapter(colorAdapter);
-
-        //edit scheduleRealm
-        if (scheduleRealm != null) {
-            textTime.setText(scheduleRealm.getTime());
-            scheduleTitle.setText(scheduleRealm.getTitle());
-            scheduleDescript.setText(scheduleRealm.getDescript());
-            deleteSchedule.setVisibility(View.VISIBLE);
-            colorAdapter.setColorPosition(scheduleRealm.getColorRealm().getColorNumber());
-            setTextWithCursorFinal(scheduleTitle);
-            setTextWithCursorFinal(scheduleDescript);
-        } else {
-            //create scheduleRealm
-            deleteSchedule.setVisibility(View.GONE);
-            selectedHour = new Time(System.currentTimeMillis()).getHours();
-            selectedMinute = new Time(System.currentTimeMillis()).getMinutes();
-            String curTime = String.format("%02d:%02d", selectedHour, selectedMinute);
-            textTime.setText(curTime);
-            time = curTime;
-        }
 
         clickTime.setOnClickListener(new View.OnClickListener() {
 
@@ -237,6 +205,53 @@ public class CreateSchedulesActivity extends AppCompatActivity implements Recycl
                 radioTenMinAlert.setChecked(false);
             }
         });
+
+        //edit scheduleRealm
+        if (scheduleRealm != null) {
+            textTime.setText(scheduleRealm.getTime());
+            scheduleTitle.setText(scheduleRealm.getTitle());
+            scheduleDescript.setText(scheduleRealm.getDescript());
+            dayWeek.setText(Utils.getDayofWeek(scheduleRealm.getDay(), this));
+            colorAdapter.setColorPosition(scheduleRealm.getColor());
+            setTextWithCursorFinal(scheduleTitle);
+            setTextWithCursorFinal(scheduleDescript);
+
+            switch (scheduleRealm.getAlertType()){
+                case Schedule.NOT_ALERT:
+                    radioDoNotAlert.setChecked(true);
+                    break;
+                case Schedule.ONCE_ALERT:
+                    radioOnceAlert.setChecked(true);
+                    break;
+                case Schedule.ALWAYS_ALERT:
+                    radioAlwaysAlert.setChecked(true);
+                    break;
+            }
+
+            switch (scheduleRealm.getAlertFrequency()){
+                case Schedule.ALERT_ON_TIME:
+                    radioOnTimeAlert.setChecked(true);
+                    break;
+                case Schedule.ALERT_10_BEFORE:
+                    radioTenMinAlert.setChecked(true);
+                    break;
+                case Schedule.ALERT_30_BEFORE:
+                    radioThirMinAlert.setChecked(true);
+                    break;
+            }
+
+            deleteSchedule.setVisibility(View.VISIBLE);
+        } else {
+            //create scheduleRealm
+            deleteSchedule.setVisibility(View.GONE);
+            radioDoNotAlert.setChecked(true);
+            radioOnTimeAlert.setChecked(true);
+            selectedHour = new Time(System.currentTimeMillis()).getHours();
+            selectedMinute = new Time(System.currentTimeMillis()).getMinutes();
+            String curTime = String.format("%02d:%02d", selectedHour, selectedMinute);
+            textTime.setText(curTime);
+            time = curTime;
+        }
     }
 
     public void setEnableRadioButtons(boolean enable){
@@ -272,15 +287,22 @@ public class CreateSchedulesActivity extends AppCompatActivity implements Recycl
                 } else {
                     if (scheduleRealm != null) {
                         //edit scheduleRealm
-                        ScheduleDAO.updateSchedule(scheduleRealm.getId(), scheduleTitle.getText().toString(), scheduleDescript.getText().toString(), selectedHour, selectedMinute, time, colorRealmSelected, alertType, alertFrequency);
+                        ScheduleDAO.updateSchedule(scheduleRealm.getId(), scheduleTitle.getText().toString(), scheduleDescript.getText().toString(), selectedHour, selectedMinute, time, colorSelected, alertType, alertFrequency);
                         finish();
                         Toast.makeText(this, getString(R.string.schedule_update_message), Toast.LENGTH_LONG).show();
                     } else {
                         //create scheduleRealm
+                        Schedule schedule = setSchedule(new Schedule());
+
                         scheduleRealm = new ScheduleRealm();
-                        scheduleRealm = Schedule.copyFromNormal(setSchedule(new Schedule()));
+                        scheduleRealm = Schedule.copyFromNormal(schedule);
 
                         ScheduleDAO.saveSchedule(scheduleRealm);
+
+                        if (alertType != Schedule.NOT_ALERT){
+                            Utils.scheduleNotification(this, schedule, alertFrequency);
+                        }
+
                         finish();
                         Toast.makeText(this, getString(R.string.schedule_create_message), Toast.LENGTH_LONG).show();
                     }
@@ -303,12 +325,11 @@ public class CreateSchedulesActivity extends AppCompatActivity implements Recycl
 
         schedule.setTitle(scheduleTitle.getText().toString());
         schedule.setDescript(scheduleDescript.getText().toString());
-        schedule.setDay(day);
-
+        schedule.setDay(daySelected);
         schedule.setHour(selectedHour);
         schedule.setMinutes(selectedMinute);
         schedule.setTime(time);
-        schedule.setColorRealm(colorRealmSelected);
+        schedule.setColor(colorSelected);
 
         schedule.setAlertType(alertType);
         schedule.setAlertFrequency(alertFrequency);
@@ -324,30 +345,8 @@ public class CreateSchedulesActivity extends AppCompatActivity implements Recycl
     }
 
     @Override
-    public void onColorClick(ColorRealm colorRealm) {
-        if (colorRealm != null){
-            colorRealmSelected = colorRealm;
-        }else{
-            colorRealmSelected = new ColorRealm(0, Constants.NO_COLOR);
-        }
+    public void onColorClick(int colorPosition) {
+        colorSelected = colorPosition;
     }
 
-    private void scheduleNotification(Notification notification, int delay) {
-        Intent notificationIntent = new Intent(this, NotificationPublisher.class);
-        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, 1);
-        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION, notification);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        long futureInMillis = SystemClock.elapsedRealtime() + delay;
-        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
-        alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, futureInMillis, pendingIntent);
-    }
-
-    private Notification getNotification(String content) {
-        Notification.Builder builder = new Notification.Builder(this);
-        builder.setContentTitle("Bife de vaca");
-        builder.setContentText(content);
-        builder.setSmallIcon(R.mipmap.ic_launcher);
-        return builder.build();
-    }
 }

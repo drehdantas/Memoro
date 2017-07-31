@@ -11,6 +11,7 @@ import android.widget.ImageView;
 
 import com.project.andredantas.memoro.R;
 import com.project.andredantas.memoro.model.ColorRealm;
+import com.project.andredantas.memoro.utils.Utils;
 
 import java.util.List;
 
@@ -23,7 +24,6 @@ public class RecyclerViewColorAdapter extends RecyclerView.Adapter {
 
     private Context context;
     private LayoutInflater layoutInflater;
-    private List<ColorRealm> colorRealms;
     private int selectedPos = 0;
     private long colorNumberSelected;
     private OnColorClickListener listener;
@@ -38,9 +38,6 @@ public class RecyclerViewColorAdapter extends RecyclerView.Adapter {
         return selectedPos;
     }
 
-    public void setColorRealms(List<ColorRealm> colorRealms) {
-        this.colorRealms = colorRealms;
-    }
 
     public void setColorPosition(long colorNumber){
         colorNumberSelected = colorNumber;
@@ -66,7 +63,8 @@ public class RecyclerViewColorAdapter extends RecyclerView.Adapter {
             GradientDrawable drawable = (GradientDrawable) context.getResources().getDrawable(R.drawable.color_circle);
             drawable.setStroke(1, context.getResources().getColor(R.color.darker_gray));
 
-            int color = (int) colorRealms.get(position - NO_COLOR).getColorNumber();
+            int color = Utils.getColors(position, context);
+
             ColorHolder colorHolder = (ColorHolder) holder;
             drawable.setColor(color);
             colorHolder.imageView.setBackground(drawable);
@@ -76,7 +74,7 @@ public class RecyclerViewColorAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemCount() {
-        return colorRealms == null ? 0 : colorRealms.size() + NO_COLOR;
+        return Utils.colorMap == null ? 0 : Utils.colorMap.size();
     }
 
     @Override
@@ -102,7 +100,7 @@ public class RecyclerViewColorAdapter extends RecyclerView.Adapter {
                     if(position != RecyclerView.NO_POSITION){
                         selectedPos = position;
                         notifyItemChanged(selectedPos);
-                        listener.onColorClick(colorRealms.get(selectedPos - NO_COLOR));
+                        listener.onColorClick(selectedPos);
                     }
 
                 }
@@ -129,7 +127,7 @@ public class RecyclerViewColorAdapter extends RecyclerView.Adapter {
                     if(position != RecyclerView.NO_POSITION){
                         selectedPos = position;
                         notifyItemChanged(selectedPos);
-                        listener.onColorClick(null);
+                        listener.onColorClick(0);
                     }
 
                 }
@@ -139,7 +137,7 @@ public class RecyclerViewColorAdapter extends RecyclerView.Adapter {
     }
 
     public interface OnColorClickListener {
-        void onColorClick(ColorRealm colorRealm);
+        void onColorClick(int color);
     }
 
 }

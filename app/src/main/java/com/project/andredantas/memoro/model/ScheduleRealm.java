@@ -1,5 +1,6 @@
 package com.project.andredantas.memoro.model;
 
+import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -7,23 +8,19 @@ import io.realm.annotations.PrimaryKey;
  * Created by Andre Dantas on 7/14/16.
  */
 public class ScheduleRealm extends RealmObject{
-    public static String BLUE = "blue";
-    public static String RED = "red";
-    public static String YELLOW = "yellow";
-    public static String GREEN = "green";
 
     @PrimaryKey
     private long id;
-    private String day;
+    private int day;
     private String title;
     private String descript;
     private String time;
-    private ColorRealm colorRealm;
     private int hour;
     private int minutes;
     private boolean active = true;
     private int alertType;
     private int alertFrequency;
+    private int color;
 
     public boolean isActive() {
         return active;
@@ -41,11 +38,11 @@ public class ScheduleRealm extends RealmObject{
         this.id = id;
     }
 
-    public String getDay() {
+    public int getDay() {
         return day;
     }
 
-    public void setDay(String day) {
+    public void setDay(int day) {
         this.day = day;
     }
 
@@ -89,13 +86,6 @@ public class ScheduleRealm extends RealmObject{
         this.minutes = minutes;
     }
 
-    public ColorRealm getColorRealm() {
-        return colorRealm;
-    }
-
-    public void setColorRealm(ColorRealm colorRealm) {
-        this.colorRealm = colorRealm;
-    }
 
     public int getAlertType() {
         return alertType;
@@ -111,5 +101,13 @@ public class ScheduleRealm extends RealmObject{
 
     public void setAlertFrequency(int alertFrequency) {
         this.alertFrequency = alertFrequency;
+    }
+
+    public int getColor() {
+        return color;
+    }
+
+    public void setColor(int color) {
+        this.color = color;
     }
 }

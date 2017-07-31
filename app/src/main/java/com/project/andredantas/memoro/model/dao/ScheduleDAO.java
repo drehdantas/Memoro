@@ -3,7 +3,6 @@ package com.project.andredantas.memoro.model.dao;
 import android.content.Context;
 
 import com.project.andredantas.memoro.R;
-import com.project.andredantas.memoro.model.ColorRealm;
 import com.project.andredantas.memoro.model.ScheduleRealm;
 import com.project.andredantas.memoro.model.Schedule;
 
@@ -26,12 +25,12 @@ public class ScheduleDAO {
         realm.commitTransaction();
     }
 
-    public static void updateSchedule(long id, String title, String descript, int hour, int minutes, String time, ColorRealm colorRealm, int alertType, int alertFrequency) {
+    public static void updateSchedule(long id, String title, String descript, int hour, int minutes, String time, int color, int alertType, int alertFrequency) {
         realm.beginTransaction();
         ScheduleRealm scheduleRealm = getById(id);
         scheduleRealm.setTitle(title);
         scheduleRealm.setDescript(descript);
-        scheduleRealm.setColorRealm(colorRealm);
+        scheduleRealm.setColor(color);
         scheduleRealm.setAlertType(alertType);
         scheduleRealm.setAlertFrequency(alertFrequency);
         if (time != null && !time.equals("")){
@@ -52,7 +51,8 @@ public class ScheduleDAO {
     public static ScheduleRealm getById(long scheduleId){
         return realm.where(ScheduleRealm.class).equalTo("id", scheduleId).findFirst();
     }
-    public static List<ScheduleRealm> listSchedules(String day){
+
+    public static List<ScheduleRealm> listSchedules(int day){
         List<ScheduleRealm> scheduleRealms = realm
                 .where(ScheduleRealm.class)
                 .equalTo("day", day)

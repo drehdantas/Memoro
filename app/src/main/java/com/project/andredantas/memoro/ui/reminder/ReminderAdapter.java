@@ -14,6 +14,7 @@ import com.project.andredantas.memoro.R;
 import com.project.andredantas.memoro.model.ReminderRealm;
 import com.project.andredantas.memoro.model.ScheduleRealm;
 import com.project.andredantas.memoro.model.dao.ScheduleDAO;
+import com.project.andredantas.memoro.utils.Constants;
 import com.project.andredantas.memoro.utils.Utils;
 
 import java.util.Collections;
@@ -63,8 +64,8 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.MyView
 
         if (reminderRealm.getScheduleRelated() != 1){
             ScheduleRealm scheduleRealm = ScheduleDAO.getById(reminderRealm.getScheduleRelated());
-            holder.backgroundColor.setBackgroundColor((int) scheduleRealm.getColorRealm().getColorNumber());
-            holder.reminderImage.setColorFilter(ContextCompat.getColor(context,R.color.mdtp_white));
+            holder.backgroundColor.setBackgroundColor(Utils.getColors(scheduleRealm.getColor(), context));
+            holder.reminderImage.setColorFilter(ContextCompat.getColor(context, R.color.mdtp_white));
         }
     }
 

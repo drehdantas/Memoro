@@ -128,7 +128,6 @@
                 android:id="@+id/no_alert"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:checked="true"
                 android:text="@string/no_notification"
                 android:textColor="@android:color/background_dark" />
 
@@ -174,7 +173,6 @@
                     android:id="@+id/on_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:checked="true"
                     android:text="@string/notification_0min"
                     android:textColor="@android:color/background_dark" />
 

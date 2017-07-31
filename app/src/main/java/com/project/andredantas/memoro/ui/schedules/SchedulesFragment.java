@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.project.andredantas.memoro.R;
+import com.project.andredantas.memoro.model.Schedule;
 import com.project.andredantas.memoro.model.ScheduleRealm;
 import com.project.andredantas.memoro.model.dao.ScheduleDAO;
 
@@ -21,13 +22,7 @@ import butterknife.OnClick;
 
 
 public class SchedulesFragment extends Fragment implements SchedulesAdapter.OnScheduleClickListener {
-    public String MON;
-    public String TUE;
-    public String WED;
-    public String THU;
-    public String FRI;
-    public String SAT;
-    public String SUN;
+    public String mon, tue, wed, thu, fri, sat, sun;
 
     @Bind(R.id.schedule_mon)
     RecyclerView scheduleMon;
@@ -50,19 +45,19 @@ public class SchedulesFragment extends Fragment implements SchedulesAdapter.OnSc
         View view = inflater.inflate(R.layout.fragment_schedules, container, false);
         ButterKnife.bind(this, view);
 
-        MON = getActivity().getString(R.string.monday);
-        TUE = getActivity().getString(R.string.tuesday);
-        WED = getActivity().getString(R.string.wednesday);
-        THU = getActivity().getString(R.string.thursday);
-        FRI = getActivity().getString(R.string.friday);
-        SAT = getActivity().getString(R.string.saturday);
-        SUN = getActivity().getString(R.string.sunday);
+        mon = getActivity().getString(R.string.monday);
+        tue = getActivity().getString(R.string.tuesday);
+        wed = getActivity().getString(R.string.wednesday);
+        thu = getActivity().getString(R.string.thursday);
+        fri = getActivity().getString(R.string.friday);
+        sat = getActivity().getString(R.string.saturday);
+        sun = getActivity().getString(R.string.sunday);
 
         return view;
     }
 
     @Override
-    public void onScheduleClick(ScheduleRealm scheduleRealm, String day) {
+    public void onScheduleClick(ScheduleRealm scheduleRealm, int day) {
         Intent intent = new Intent(getActivity(), CreateSchedulesActivity.class);
         intent.putExtra("scheduleRealm", scheduleRealm.getId());
         intent.putExtra("day", day);
@@ -72,81 +67,81 @@ public class SchedulesFragment extends Fragment implements SchedulesAdapter.OnSc
     @OnClick(R.id.create_mon)
     public void onCreateScheduleMonClick() {
         Intent intent = new Intent(getActivity(), CreateSchedulesActivity.class);
-        intent.putExtra("day", MON);
+        intent.putExtra("day", Schedule.MONDAY);
         startActivity(intent);
     }
 
     @OnClick(R.id.create_tue)
     public void onCreateScheduleTueClick() {
         Intent intent = new Intent(getActivity(), CreateSchedulesActivity.class);
-        intent.putExtra("day", TUE);
+        intent.putExtra("day", Schedule.TUESDAY);
         startActivity(intent);
     }
 
     @OnClick(R.id.create_wed)
     public void onCreateScheduleWedClick() {
         Intent intent = new Intent(getActivity(), CreateSchedulesActivity.class);
-        intent.putExtra("day", WED);
+        intent.putExtra("day", Schedule.WEDNESDAY);
         startActivity(intent);
     }
 
     @OnClick(R.id.create_thu)
     public void onCreateScheduleThuClick() {
         Intent intent = new Intent(getActivity(), CreateSchedulesActivity.class);
-        intent.putExtra("day", THU);
+        intent.putExtra("day", Schedule.THURSDAY);
         startActivity(intent);
     }
 
     @OnClick(R.id.create_fri)
     public void onCreateScheduleFriClick() {
         Intent intent = new Intent(getActivity(), CreateSchedulesActivity.class);
-        intent.putExtra("day", FRI);
+        intent.putExtra("day", Schedule.FRIDAY);
         startActivity(intent);
     }
 
     @OnClick(R.id.create_sat)
     public void onCreateScheduleSatClick() {
         Intent intent = new Intent(getActivity(), CreateSchedulesActivity.class);
-        intent.putExtra("day", SAT);
+        intent.putExtra("day", Schedule.SATURDAY);
         startActivity(intent);
     }
 
     @OnClick(R.id.create_sun)
     public void onCreateScheduleSunClick() {
         Intent intent = new Intent(getActivity(), CreateSchedulesActivity.class);
-        intent.putExtra("day", SUN);
+        intent.putExtra("day", Schedule.SUNDAY);
         startActivity(intent);
     }
 
     @Override
     public void onResume(){
         super.onResume();
-        List<ScheduleRealm> listSchedulesMon = ScheduleDAO.listSchedules(MON);
-        scheduleMon.setAdapter(new SchedulesAdapter(getActivity(), listSchedulesMon, MON, this));
+        List<ScheduleRealm> listSchedulesMon = ScheduleDAO.listSchedules(Schedule.MONDAY);
+        scheduleMon.setAdapter(new SchedulesAdapter(getActivity(), listSchedulesMon, mon, this));
         scheduleMon.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
 
-        List<ScheduleRealm> listSchedulesTue = ScheduleDAO.listSchedules(TUE);
-        scheduleTue.setAdapter(new SchedulesAdapter(getActivity(), listSchedulesTue, TUE, this));
+        List<ScheduleRealm> listSchedulesTue = ScheduleDAO.listSchedules(Schedule.TUESDAY);
+        scheduleTue.setAdapter(new SchedulesAdapter(getActivity(), listSchedulesTue, tue, this));
         scheduleTue.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
 
-        List<ScheduleRealm> listSchedulesWed = ScheduleDAO.listSchedules(WED);
-        scheduleWed.setAdapter(new SchedulesAdapter(getActivity(), listSchedulesWed, WED, this));
+        List<ScheduleRealm> listSchedulesWed = ScheduleDAO.listSchedules(Schedule.WEDNESDAY);
+        scheduleWed.setAdapter(new SchedulesAdapter(getActivity(), listSchedulesWed, wed, this));
         scheduleWed.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
 
-        List<ScheduleRealm> listSchedulesThu = ScheduleDAO.listSchedules(THU);
-        scheduleThu.setAdapter(new SchedulesAdapter(getActivity(), listSchedulesThu, THU, this));
+        List<ScheduleRealm> listSchedulesThu = ScheduleDAO.listSchedules(Schedule.THURSDAY);
+        scheduleThu.setAdapter(new SchedulesAdapter(getActivity(), listSchedulesThu, thu, this));
         scheduleThu.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
 
-        List<ScheduleRealm> listSchedulesFri = ScheduleDAO.listSchedules(FRI);
-        scheduleFri.setAdapter(new SchedulesAdapter(getActivity(), listSchedulesFri, FRI, this));
+        List<ScheduleRealm> listSchedulesFri = ScheduleDAO.listSchedules(Schedule.FRIDAY);
+        scheduleFri.setAdapter(new SchedulesAdapter(getActivity(), listSchedulesFri, fri, this));
         scheduleFri.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
 
-        List<ScheduleRealm> listSchedulesSat = ScheduleDAO.listSchedules(SAT);
-        scheduleSat.setAdapter(new SchedulesAdapter(getActivity(), listSchedulesSat, SAT, this));
+        List<ScheduleRealm> listSchedulesSat = ScheduleDAO.listSchedules(Schedule.SATURDAY);
+        scheduleSat.setAdapter(new SchedulesAdapter(getActivity(), listSchedulesSat, sat, this));
         scheduleSat.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
 
-        List<ScheduleRealm> listSchedulesSun = ScheduleDAO.listSchedules(SUN);
-        scheduleSun.setAdapter(new SchedulesAdapter(getActivity(), listSchedulesSun, SUN, this));
+        List<ScheduleRealm> listSchedulesSun = ScheduleDAO.listSchedules(Schedule.SUNDAY);
+        scheduleSun.setAdapter(new SchedulesAdapter(getActivity(), listSchedulesSun, sun, this));
         scheduleSun.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
     }
 }

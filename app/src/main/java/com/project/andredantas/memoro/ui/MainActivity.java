@@ -37,7 +37,6 @@ public class MainActivity extends AppCompatActivity {
     private List<String> mTabNames;
     public PagerAdapter mPagerAdapter;
 
-
     @Bind(R.id.view_pager)
     ViewPager mPager;
     @Bind(R.id.tabs)
@@ -90,10 +89,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void configApp(){
         ScheduleDAO.createScheduleNone(this);
+        Utils.saveColors();
 
         if (!TinyDB.getInstance(this).getBoolean("newlogin")) {
             //SHOW SHOWCASE
-            Utils.saveColors(this);
             TinyDB.getInstance(this).putBoolean("newlogin", true);
         }
     }

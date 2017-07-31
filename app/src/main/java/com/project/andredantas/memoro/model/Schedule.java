@@ -4,21 +4,31 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.realm.Realm;
+import io.realm.RealmList;
 
 /**
  * Created by Andre Dantas on 7/14/16.
  */
 public class Schedule {
-    public static int NOT_ALERT = 0;
-    public static int ONCE_ALERT = 1;
-    public static int ALWAYS_ALERT = 2;
+    public static final int NOT_ALERT = 0;
+    public static final int ONCE_ALERT = 1;
+    public static final int ALWAYS_ALERT = 2;
 
-    public static int ALERT_ON_TIME = 0;
-    public static int ALERT_10_BEFORE = 1;
-    public static int ALERT_30_BEFORE = 2;
+    public static final int ALERT_ON_TIME = 0;
+    public static final int ALERT_10_BEFORE = 10;
+    public static final int ALERT_30_BEFORE = 30;
+
+    public static final int SUNDAY = 1;
+    public static final int MONDAY = 2;
+    public static final int TUESDAY = 3;
+    public static final int WEDNESDAY = 4;
+    public static final int THURSDAY = 5;
+    public static final int FRIDAY = 6;
+    public static final int SATURDAY = 7;
+
 
     private long id;
-    private String day;
+    private int day;
     private String title;
     private String descript;
     private String time;
@@ -27,7 +37,7 @@ public class Schedule {
     private boolean active = true;
     private int alertType;
     private int alertFrequency;
-    private ColorRealm colorRealm;
+    private int color;
 
     public boolean isActive() {
         return active;
@@ -45,11 +55,11 @@ public class Schedule {
         this.id = id;
     }
 
-    public String getDay() {
+    public int getDay() {
         return day;
     }
 
-    public void setDay(String day) {
+    public void setDay(int day) {
         this.day = day;
     }
 
@@ -93,14 +103,6 @@ public class Schedule {
         this.minutes = minutes;
     }
 
-    public ColorRealm getColorRealm() {
-        return colorRealm;
-    }
-
-    public void setColorRealm(ColorRealm colorRealm) {
-        this.colorRealm = colorRealm;
-    }
-
     public int getAlertType() {
         return alertType;
     }
@@ -117,6 +119,14 @@ public class Schedule {
         this.alertFrequency = alertFrequency;
     }
 
+    public int getColor() {
+        return color;
+    }
+
+    public void setColor(int color) {
+        this.color = color;
+    }
+
     public static List<Schedule> convertFromRealm(List<ScheduleRealm> listRealm){
         List<Schedule> schedules = new ArrayList<>();
         for (ScheduleRealm scheduleRealm : listRealm) {
@@ -131,7 +141,7 @@ public class Schedule {
         schedule.setMinutes(scheduleRealm.getMinutes());
         schedule.setHour(scheduleRealm.getHour());
         schedule.setDay(scheduleRealm.getDay());
-        schedule.setColorRealm(scheduleRealm.getColorRealm());
+        schedule.setColor(scheduleRealm.getColor());
         schedule.setDescript(scheduleRealm.getDescript());
         schedule.setId(scheduleRealm.getId());
         schedule.setTime(scheduleRealm.getTime());
@@ -157,7 +167,7 @@ public class Schedule {
         scheduleRealm.setMinutes(schedule.getMinutes());
         scheduleRealm.setHour(schedule.getHour());
         scheduleRealm.setDay(schedule.getDay());
-        scheduleRealm.setColorRealm(schedule.getColorRealm());
+        scheduleRealm.setColor(schedule.getColor());
         scheduleRealm.setDescript(schedule.getDescript());
         scheduleRealm.setId(schedule.getId());
         scheduleRealm.setTime(schedule.getTime());
